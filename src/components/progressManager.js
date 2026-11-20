@@ -66,6 +66,14 @@ export class ProgressManager {
     this.saveState();
   }
 
+  setCurrentChapter(chapterNumber) {
+    if (chapterNumber >= 1 && chapterNumber <= this.totalChapters) {
+      this.state.currentChapter = chapterNumber;
+      this.unlockChapter(chapterNumber);
+      this.saveState();
+    }
+  }
+
   goToChapter(chapterNumber, force = false) {
     if (chapterNumber < 1 || chapterNumber > this.totalChapters) return;
 

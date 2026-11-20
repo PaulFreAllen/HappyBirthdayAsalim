@@ -40,29 +40,29 @@ export function createGrowthTimeline(containerElement, roseConfigs) {
 
     // Leaves initially collapsed
     const leaves = el.querySelectorAll('.rose-leaf');
-    gsap.set(leaves, { scale: 0, opacity: 0 });
+    gsap.set(leaves, { scale: 0, opacity: 0, transformOrigin: '0 0' });
 
     // Rose head (flower) initially collapsed at bud apex
     const head = el.querySelector('.rose-head');
     if (head) {
-      gsap.set(head, { scale: 0, opacity: 0 });
+      gsap.set(head, { scale: 0, opacity: 0, transformOrigin: '0 0' });
     }
 
     // Sepals initially hugging tight
     const sepals = el.querySelectorAll('.rose-sepal');
-    gsap.set(sepals, { scaleY: 1.1, scaleX: 0.8, transformOrigin: '0 8px' });
+    gsap.set(sepals, { scaleY: 1.15, scaleX: 0.85, transformOrigin: '0 8px' });
 
-    // Petals collapsed inside bud
+    // Petals collapsed inside bud (anchored at center base 0 0)
     const outerPetals = el.querySelectorAll('.petal-outer');
     const midPetals = el.querySelectorAll('.petal-mid');
     const innerPetals = el.querySelectorAll('.petal-inner');
     const bloomGlow = el.querySelector('.rose-bloom-glow');
 
-    gsap.set(outerPetals, { scale: 0.1, opacity: 0, transformOrigin: '0% 90%' });
-    gsap.set(midPetals, { scale: 0.15, opacity: 0, transformOrigin: '0% 90%' });
-    gsap.set(innerPetals, { scale: 0.2, opacity: 0, transformOrigin: '0% 90%' });
+    gsap.set(outerPetals, { scale: 0.05, opacity: 0, transformOrigin: '0 0' });
+    gsap.set(midPetals, { scale: 0.08, opacity: 0, transformOrigin: '0 0' });
+    gsap.set(innerPetals, { scale: 0.12, opacity: 0, transformOrigin: '0 0' });
     if (bloomGlow) {
-      gsap.set(bloomGlow, { opacity: 0, scale: 0.4 });
+      gsap.set(bloomGlow, { opacity: 0, scale: 0.3, transformOrigin: '0 0' });
     }
   });
 
@@ -175,33 +175,33 @@ export function createGrowthTimeline(containerElement, roseConfigs) {
       tl.to(outerPetals, {
         scale: 1,
         opacity: 1,
-        duration: 20,
+        duration: 18,
         stagger: 2,
-        ease: 'cubic-bezier(0.34, 1.3, 0.64, 1)',
+        ease: 'back.out(1.4)',
       }, bloomStart + 4);
     }
 
-    // 2. Mid-whorl petals expand and lift upward
+    // 2. Mid-whorl petals expand and lift upward next
     if (midPetals.length > 0) {
       tl.to(midPetals, {
         scale: 1,
         opacity: 1,
-        duration: 18,
-        stagger: 2.2,
-        ease: 'cubic-bezier(0.34, 1.25, 0.64, 1)',
-      }, bloomStart + 8);
+        duration: 16,
+        stagger: 2,
+        ease: 'back.out(1.2)',
+      }, bloomStart + 9);
     }
 
-    // 3. Inner heart petals spiral open
+    // 3. Inner heart petals spiral open last
     if (innerPetals.length > 0) {
       tl.to(innerPetals, {
         scale: 1,
         opacity: 1,
         rotation: (i) => (i % 2 === 0 ? 8 : -8),
-        duration: 16,
+        duration: 14,
         stagger: 2,
         ease: 'power2.out',
-      }, bloomStart + 12);
+      }, bloomStart + 14);
     }
 
     // Soft cyan bloom glow radiates around flower head

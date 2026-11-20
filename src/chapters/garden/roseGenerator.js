@@ -69,6 +69,20 @@ export function getRoseGradients() {
       <filter id="gardenAtmosphereBlur" x="-20%" y="-20%" width="140%" height="140%">
         <feGaussianBlur stdDeviation="2.5" />
       </filter>
+
+      <!-- Soft Ambient Bloom Glow Gradient (replaces CSS radial-gradient) -->
+      <radialGradient id="roseBloomHaloGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.3" />
+        <stop offset="45%" stop-color="#1d4ed8" stop-opacity="0.12" />
+        <stop offset="100%" stop-color="#00f0ff" stop-opacity="0" />
+      </radialGradient>
+
+      <!-- Horizon Ground Mist Gradient (replaces CSS radial-gradient) -->
+      <radialGradient id="gardenHorizonMistGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#0e2b6b" stop-opacity="0.5" />
+        <stop offset="65%" stop-color="#081a48" stop-opacity="0.2" />
+        <stop offset="100%" stop-color="#030713" stop-opacity="0" />
+      </radialGradient>
     </defs>
   `;
 }
@@ -142,76 +156,81 @@ export function createRoseSVG(options) {
           fill="#064e3b" 
         />
 
-        <!-- Leaf 1 (Left Branch) -->
-        <g class="rose-leaf rose-leaf-left" transform="translate(${leaf1X}, ${leaf1Y}) scale(${scale})" transform-origin="0 0">
-          <path 
-            class="leaf-petiole" 
-            d="M 0,0 Q -18,-12 -38,-10" 
-            fill="none" 
-            stroke="url(#roseStemGrad)" 
-            stroke-width="2.5" 
-          />
-          <path 
-            class="leaf-blade" 
-            d="M -38,-10 C -55,-28 -80,-18 -92,-4 C -84,14 -58,16 -38,-10 Z" 
-            fill="url(#roseLeafGrad)" 
-            stroke="#00f0ff" 
-            stroke-width="0.5" 
-            stroke-opacity="0.35" 
-          />
-          <path 
-            class="leaf-vein" 
-            d="M -38,-10 Q -65,-5 -92,-4" 
-            fill="none" 
-            stroke="#34d399" 
-            stroke-width="1.2" 
-            stroke-opacity="0.6" 
-          />
+        <!-- Leaf 1 (Left Branch with positioning anchor) -->
+        <g class="rose-leaf-anchor" transform="translate(${leaf1X}, ${leaf1Y}) scale(${scale})">
+          <g class="rose-leaf rose-leaf-left" transform-origin="0 0">
+            <path 
+              class="leaf-petiole" 
+              d="M 0,0 Q -18,-12 -38,-10" 
+              fill="none" 
+              stroke="url(#roseStemGrad)" 
+              stroke-width="2.5" 
+            />
+            <path 
+              class="leaf-blade" 
+              d="M -38,-10 C -55,-28 -80,-18 -92,-4 C -84,14 -58,16 -38,-10 Z" 
+              fill="url(#roseLeafGrad)" 
+              stroke="#00f0ff" 
+              stroke-width="0.5" 
+              stroke-opacity="0.35" 
+            />
+            <path 
+              class="leaf-vein" 
+              d="M -38,-10 Q -65,-5 -92,-4" 
+              fill="none" 
+              stroke="#34d399" 
+              stroke-width="1.2" 
+              stroke-opacity="0.6" 
+            />
+          </g>
         </g>
 
-        <!-- Leaf 2 (Right Branch) -->
-        <g class="rose-leaf rose-leaf-right" transform="translate(${leaf2X}, ${leaf2Y}) scale(${scale})" transform-origin="0 0">
-          <path 
-            class="leaf-petiole" 
-            d="M 0,0 Q 18,-10 36,-6" 
-            fill="none" 
-            stroke="url(#roseStemGrad)" 
-            stroke-width="2.5" 
-          />
-          <path 
-            class="leaf-blade" 
-            d="M 36,-6 C 54,-24 82,-12 92,2 C 82,18 56,18 36,-6 Z" 
-            fill="url(#roseLeafGrad)" 
-            stroke="#00f0ff" 
-            stroke-width="0.5" 
-            stroke-opacity="0.35" 
-          />
-          <path 
-            class="leaf-vein" 
-            d="M 36,-6 Q 64,-2 92,2" 
-            fill="none" 
-            stroke="#34d399" 
-            stroke-width="1.2" 
-            stroke-opacity="0.6" 
-          />
+        <!-- Leaf 2 (Right Branch with positioning anchor) -->
+        <g class="rose-leaf-anchor" transform="translate(${leaf2X}, ${leaf2Y}) scale(${scale})">
+          <g class="rose-leaf rose-leaf-right" transform-origin="0 0">
+            <path 
+              class="leaf-petiole" 
+              d="M 0,0 Q 18,-10 36,-6" 
+              fill="none" 
+              stroke="url(#roseStemGrad)" 
+              stroke-width="2.5" 
+            />
+            <path 
+              class="leaf-blade" 
+              d="M 36,-6 C 54,-24 82,-12 92,2 C 82,18 56,18 36,-6 Z" 
+              fill="url(#roseLeafGrad)" 
+              stroke="#00f0ff" 
+              stroke-width="0.5" 
+              stroke-opacity="0.35" 
+            />
+            <path 
+              class="leaf-vein" 
+              d="M 36,-6 Q 64,-2 92,2" 
+              fill="none" 
+              stroke="#34d399" 
+              stroke-width="1.2" 
+              stroke-opacity="0.6" 
+            />
+          </g>
         </g>
       </g>
 
       <!-- FLOWER HEAD & BLOOMING PETALS -->
-      <g 
-        class="rose-head" 
-        transform="translate(${headX}, ${headY}) scale(${scale}) rotate(${rotation})" 
-        transform-origin="0 0"
-      >
-        <!-- Ambient Bloom Glow Halo -->
-        <circle 
-          class="rose-bloom-glow" 
-          cx="0" 
-          cy="0" 
-          r="75" 
-          fill="radial-gradient(circle, rgba(0, 240, 255, 0.25) 0%, transparent 70%)" 
-          opacity="0" 
-        />
+      <!-- 1. Anchor Group: holds fixed world position, depth scale, and natural tilt -->
+      <g class="rose-head-anchor" transform="translate(${headX}, ${headY}) scale(${scale}) rotate(${rotation})">
+        <!-- 2. Sway Group: receives breeze rotation in idle sway without altering growth or position -->
+        <g class="rose-head-sway" transform-origin="0 0">
+          <!-- 3. Growth Group: scaled from 0 -> 1 during budding/blooming -->
+          <g class="rose-head" transform-origin="0 0">
+            <!-- Ambient Bloom Glow Halo -->
+            <circle 
+              class="rose-bloom-glow" 
+              cx="0" 
+              cy="0" 
+              r="75" 
+              fill="url(#roseBloomHaloGrad)" 
+              opacity="0" 
+            />
 
         <!-- Sepals (Calyx surrounding the rose base) -->
         <g class="rose-sepals-group">
@@ -362,5 +381,7 @@ export function createRoseSVG(options) {
         </g>
       </g>
     </g>
+  </g>
+</g>
   `;
 }

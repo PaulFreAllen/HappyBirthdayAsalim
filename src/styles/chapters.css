@@ -36,11 +36,126 @@
   display: none;
 }
 
-/* Chapter 1: The Invitation */
+/* Chapter 1: The Invitation & Cinematic Scroll Transition */
 .chapter-invitation {
   text-align: center;
-  max-width: 780px;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 0 !important;
+  overflow: visible;
+}
+
+.ch1-scroll-track {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.ch1-scroll-track.is-scrollable {
+  height: 280vh; /* Smooth scrub track depth */
+}
+
+.ch1-viewport {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Layer 1: Invitation Scene */
+.ch1-invitation-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 680px;
+  text-align: center;
+  z-index: 10;
+}
+
+/* Floating Scroll Cue Hint */
+.ch1-scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(14, 26, 58, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: var(--cyan-subtle);
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
+  backdrop-filter: blur(10px);
+  animation: promptBob 2.4s ease-in-out infinite;
+  cursor: pointer;
+}
+
+/* Layer 2: Celestial Aperture Portal */
+.ch1-portal-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portal-core-orb {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.35) 0%, rgba(37, 99, 235, 0.15) 50%, transparent 75%);
+  filter: blur(25px);
+  transform: scale(0.1);
+  opacity: 0;
+}
+
+.portal-ring {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.portal-ring-outer {
+  width: 380px;
+  height: 380px;
+  border: 1.5px dashed rgba(56, 189, 248, 0.3);
+  transform: scale(0.2);
+  opacity: 0;
+}
+
+.portal-ring-inner {
+  width: 260px;
+  height: 260px;
+  border: 1.5px dotted rgba(0, 240, 255, 0.45);
+  transform: scale(0.15);
+  opacity: 0;
+}
+
+/* Layer 3: Date Lock Morph Target Layer */
+.ch1-lock-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 560px;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .invitation-salutation {

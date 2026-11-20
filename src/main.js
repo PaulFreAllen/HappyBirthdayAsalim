@@ -21,6 +21,7 @@ import { createChapter6 } from './chapters/chapter6_letter.js';
 import { createChapter7 } from './chapters/chapter7_videoFinale.js';
 
 gsap.registerPlugin(ScrollTrigger);
+window.ScrollTrigger = ScrollTrigger;
 
 class SapphireBlossomApp {
   constructor() {
@@ -172,6 +173,9 @@ class SapphireBlossomApp {
 
     if (!targetSection) return;
 
+    // Reset window scroll on chapter transition
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     this.currentChapterIndex = targetChapterIndex;
     this.updateNavigationUI(targetChapterIndex);
     document.body.className = `theme-ch-${targetChapterIndex}`;
@@ -200,6 +204,7 @@ class SapphireBlossomApp {
     const tl = gsap.timeline({
       onComplete: () => {
         this.isTransitioning = false;
+        ScrollTrigger.refresh();
       },
     });
 
@@ -256,7 +261,7 @@ class SapphireBlossomApp {
       tl.fromTo(
         targetSection,
         { opacity: 0, scale: 1.03, filter: 'blur(8px)', y: 22 },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', y: 0, duration: 0.68, ease: 'power3.out' }
+        { opacity: 1, scale: 1, filter: 'blur(0px)', y: 0, duration: 0.68, ease: 'power3.out', clearProps: 'transform,filter' }
       );
 
       // Stagger entrance on card contents if present

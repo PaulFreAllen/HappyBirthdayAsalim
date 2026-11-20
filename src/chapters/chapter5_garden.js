@@ -75,7 +75,7 @@ export function createChapter5(app) {
             <!-- Distant Horizon Mist & Navy Ground Silhouette -->
             <g class="garden-ground-group">
               <!-- Soft horizon mist glow -->
-              <ellipse cx="600" cy="790" rx="750" ry="120" fill="radial-gradient(circle, rgba(14, 43, 107, 0.45) 0%, transparent 70%)" />
+              <ellipse cx="600" cy="790" rx="750" ry="120" fill="url(#gardenHorizonMistGrad)" />
               <!-- Ground hill base -->
               <path 
                 d="M -100,800 Q 250,730 600,750 T 1300,740 L 1300,850 L -100,850 Z" 
@@ -235,24 +235,25 @@ export function createChapter5(app) {
     isIdleActive = true;
     let startTime = performance.now();
 
-    const flowerHeads = document.querySelectorAll('.garden-rose .rose-head');
-    const stems = document.querySelectorAll('.garden-rose .rose-stem');
+    const swayGroups = document.querySelectorAll('.garden-rose .rose-head-sway');
 
     function idleLoop(now) {
       if (!isIdleActive) return;
       const elapsed = (now - startTime) * 0.001;
 
-      flowerHeads.forEach((head, idx) => {
-        const offset = idx * 0.8;
-        const sway = Math.sin(elapsed * 1.5 + offset) * 1.6;
-        head.style.transform = `rotate(${sway}deg)`;
+      swayGroups.forEach((swayGroup, idx) => {
+        const offset = idx * 0.85;
+        const sway = Math.sin(elapsed * 1.4 + offset) * 1.8;
+        swayGroup.style.transform = `rotate(${sway}deg)`;
+        swayGroup.style.transformOrigin = '0 0';
       });
 
-      stems.forEach((stem, idx) => {
-        const offset = idx * 0.7;
-        const swayX = Math.sin(elapsed * 1.2 + offset) * 1.2;
-        stem.style.transform = `translateX(${swayX}px)`;
-      });
+      // Subtle occasional floating sapphire particles when fully bloomed
+      if (Math.random() < 0.08 && app.particles) {
+        const randX = window.innerWidth * (0.2 + Math.random() * 0.6);
+        const randY = window.innerHeight * (0.4 + Math.random() * 0.4);
+        app.particles.burst(randX, randY, 2, { palette: 'sapphire', speed: 0.45 });
+      }
 
       idleAnimationId = requestAnimationFrame(idleLoop);
     }
@@ -266,10 +267,8 @@ export function createChapter5(app) {
       cancelAnimationFrame(idleAnimationId);
       idleAnimationId = null;
     }
-    const flowerHeads = document.querySelectorAll('.garden-rose .rose-head');
-    const stems = document.querySelectorAll('.garden-rose .rose-stem');
-    flowerHeads.forEach((head) => (head.style.transform = ''));
-    stems.forEach((stem) => (stem.style.transform = ''));
+    const swayGroups = document.querySelectorAll('.garden-rose .rose-head-sway');
+    swayGroups.forEach((swayGroup) => (swayGroup.style.transform = ''));
   }
 
   function cleanup() {
