@@ -4,7 +4,7 @@ import path from 'path';
 
 const CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const PORT = 4173;
-const APP_URL = `http://localhost:${PORT}/sapphire-blossom/`;
+const APP_URL = `http://localhost:${PORT}/HappyBirthdayAsalim/`;
 
 async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
