@@ -102,28 +102,22 @@ body.theme-ch-3 {
   --ambient-color-3: rgba(0, 240, 255, 0.09);
 }
 
-/* Chapter 4 Theme: Intimate Warm Candlelight & Velvet Sapphire */
+/* Chapter 4 Theme: Sapphire Blossom Living Garden */
 body.theme-ch-4 {
-  --ambient-color-1: rgba(245, 158, 11, 0.12);
-  --ambient-color-2: rgba(67, 56, 202, 0.12);
-  --ambient-color-3: rgba(236, 72, 153, 0.07);
-}
-
-/* Chapter 5 Theme: Sapphire Blossom Living Garden */
-body.theme-ch-5 {
   --ambient-color-1: rgba(15, 43, 107, 0.25);
   --ambient-color-2: rgba(37, 99, 235, 0.18);
   --ambient-color-3: rgba(0, 240, 255, 0.10);
 }
 
-/* Chapter 6 Theme: Velvet Midnight, Sapphire & Golden Stardust */
-body.theme-ch-6 {
+/* Chapter 5 Theme: Velvet Midnight, Sapphire & Golden Stardust */
+body.theme-ch-5 {
   --ambient-color-1: rgba(30, 58, 138, 0.22);
   --ambient-color-2: rgba(245, 158, 11, 0.10);
   --ambient-color-3: rgba(0, 240, 255, 0.08);
 }
 
-/* Chapter 7 Theme: Radiant Celestial Finale & Sapphire Brilliance */
+/* Chapter 6 Theme: Radiant Celestial Finale & Sapphire Brilliance */
+body.theme-ch-6,
 body.theme-ch-7 {
   --ambient-color-1: rgba(37, 99, 235, 0.28);
   --ambient-color-2: rgba(14, 165, 233, 0.20);

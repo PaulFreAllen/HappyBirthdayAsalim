@@ -2,7 +2,7 @@
  * ===================================================================
  * SAPPHIRE BLOSSOM — CENTRAL PERSONALIZATION CONFIGURATION
  * ===================================================================
- * All personalized dates, memories, quiz questions, letters,
+ * All personalized dates, memories, letters,
  * photographs, music, and video paths are configured in this file.
  *
  * You can edit any value below safely to match your real story.
@@ -96,89 +96,9 @@ export const config = {
   },
 
   // -----------------------------------------------------------------
-  // 6. CHAPTER 4: OUR MEMORIES QUIZ (WITH OPTIONAL PHOTOGRAPHS)
+  // 6. CHAPTER 4: SAPPHIRE BLOSSOM (THE LIVING GARDEN)
   // -----------------------------------------------------------------
   chapter4: {
-    title: "Our Memories",
-    subtitle: "A few little moments that made us 'us'.",
-
-    // 4 Configurable relationship questions:
-    // To include a photograph with any memory, add photoSrc: "/images/your_photo.jpg"
-    questions: [
-      {
-        id: 1,
-        category: "Our First Memory",
-        question: "Where did we first share a moment where time seemed to stop?",
-        photoSrc: "", // Optional: e.g. "/images/memory-1.jpg"
-        photoAlt: "Our first special memory together",
-        photoCaption: "That quiet corner felt like our own universe",
-        options: [
-          "Under the twinkling city lights",
-          "At that cozy corner café table",
-          "During that spontaneous late-night drive",
-          "While getting caught in the sudden rain",
-        ],
-        correctIndex: 1, // 0-based index of correct option
-        reflection: "That quiet corner felt like our own little universe. ☕✨",
-      },
-      {
-        id: 2,
-        category: "Milestone Moment",
-        question: "What is something we did that neither of us will ever forget?",
-        photoSrc: "", // Optional: e.g. "/images/memory-2.jpg"
-        photoAlt: "Our unforgettable adventure together",
-        photoCaption: "Watching the sky turn to gold with you",
-        options: [
-          "Cooking together and making a total mess",
-          "Staying awake talking until the sunrise",
-          "Our first long road trip with terrible music",
-          "Getting lost in a museum for hours",
-        ],
-        correctIndex: 1,
-        reflection: "The sky turned gold, and I knew I never wanted that night to end. 🌅",
-      },
-      {
-        id: 3,
-        category: "Our Inside Joke",
-        question: "Whenever this happens, we both instantly burst out laughing:",
-        photoSrc: "", // Optional: e.g. "/images/memory-3.jpg"
-        photoAlt: "A moment of uncontrollable laughter",
-        photoCaption: "Nobody else gets it, but to us it's the funniest thing",
-        options: [
-          "Our ridiculous signature mispronounced word",
-          "That dramatic impression we both pull off",
-          "Ordering food and regretting how much we got",
-          "Making eye contact across a crowded room",
-        ],
-        correctIndex: 0,
-        reflection: "Nobody else gets it, but to us it's the funniest thing on earth. 😂",
-      },
-      {
-        id: 4,
-        category: "Little Details",
-        question: "What is my absolute favorite little thing about you?",
-        photoSrc: "", // Optional: e.g. "/images/memory-4.jpg"
-        photoAlt: "The little things I adore about you",
-        photoCaption: "Every single piece of you",
-        options: [
-          "The way your eyes crinkle when you really laugh",
-          "How deeply you care about the little things",
-          "Your warmth whenever you hold my hand",
-          "All of the above, endlessly and completely",
-        ],
-        correctIndex: 3,
-        reflection: "Every single piece of you is my favorite part of every day. 💙",
-      },
-    ],
-    completionText: "Funny how so many little moments can become something so important.",
-    completionSubtext: "Every memory with you is a treasure. Let's step into the garden...",
-    continueButtonText: "Enter the Sapphire Garden 🌿",
-  },
-
-  // -----------------------------------------------------------------
-  // 7. CHAPTER 5: SAPPHIRE BLOSSOM (THE LIVING GARDEN)
-  // -----------------------------------------------------------------
-  chapter5: {
     prologue1: "There was something I wanted to give you...",
     prologue2: "I couldn't bring you flowers today.",
     seedPrompt: "Scroll gently to nurture the blossom ↓",
@@ -189,35 +109,45 @@ export const config = {
   },
 
   // -----------------------------------------------------------------
-  // 8. CHAPTER 6: THE LETTER
+  // 7. CHAPTER 5: THE LETTER
   // -----------------------------------------------------------------
-  chapter6: {
+  chapter5: {
     title: "A Letter For You",
     envelopeLabel: "For my favorite person",
     letter: {
       salutation: "My Dearest,",
       paragraphs: [
         "Happy Birthday. As another year begins, I find myself thinking about all the ways you've brought gentle warmth, bright laughter, and steady peace into my life.",
-        "Distance, time, or busy days can never diminish how much you mean to me. Every shared glance, every late-night conversation, and every little dream we talk about has woven itself into who I am.",
-        "You deserve a world filled with joy, tenderness, and endless sapphire skies. I hope this little world reminds you, even for a moment, just how deeply cherished you are.",
+        "You have this quiet way of making ordinary days feel softer and bright days feel even more golden. Thank you for every shared laugh, every late-night conversation, and every little moment that only we understand.",
+        "I hope this coming year brings you all the happiness, gentle surprises, and beautiful dreams you so deeply deserve. I'm endlessly grateful to celebrate you today.",
       ],
-      closing: "With all my heart and always by your side,",
-      signature: "Yours, always ❤️",
+      closing: "With all my love and devotion,",
+      signature: "Forever yours ✨",
     },
-    continueButtonText: "One last surprise... 🎥",
+    continueButtonText: "A Special Message For You ✨",
   },
 
   // -----------------------------------------------------------------
-  // 9. CHAPTER 7: THE VIDEO & GRAND FINALE
+  // 8. CHAPTER 6: THE VIDEO & FINALE
   // -----------------------------------------------------------------
-  chapter7: {
-    introText: "I still have something to tell you...",
-    // Path to your personal birthday video file (place in public/media/):
-    videoSrc: "", // e.g. "/media/birthday_video.mp4"
-    videoPoster: "", // Optional poster/thumbnail: e.g. "/media/video_poster.jpg"
-    videoFallbackNotice: "Drop your birthday video file into /public/media/ or configure the video path in config.js.",
-    finaleHeadline: "Happy Birthday, my love.",
-    finaleSubtext: "May your year bloom as brightly as the sapphire garden.",
-    restartButtonText: "Revisit our journey ↺",
+  chapter6: {
+    introText: "A Birthday Message",
+    videoSrc: "", // Optional: e.g. "/media/birthday_video.mp4"
+    videoPoster: "", // Optional: e.g. "/media/video_poster.jpg"
+    videoFallbackNotice: "Place your personal video in public/media/birthday_video.mp4 to play your message here.",
+    finaleHeadline: "Happy Birthday, My Angel",
+    wishes: [
+      "May your day be filled with endless warmth, wonder, and joy.",
+      "Here is to another year of unforgettable adventures and beautiful memories together.",
+      "Thank you for being the most incredible part of my world.",
+    ],
+    closingMessage: "Forever celebrating you. 💙✨",
+    replayButtonText: "Relive Our Journey ✨",
+    readLetterButtonText: "Read the Letter Again ✉️",
+  },
+
+  // Backward compatibility getters
+  get chapter7() {
+    return this.chapter6;
   },
 };

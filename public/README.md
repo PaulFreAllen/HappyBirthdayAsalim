@@ -1,19 +1,15 @@
 # Sapphire Blossom — Personal Media Assets
 
-Place your personal photos, video, and background music in this directory.
+Place your personal video and background music in this directory.
 
 ## Directory Structure:
 
 ```
 public/
-  ├── images/
-  │   ├── memory-1.jpg   (Optional: Photograph for Quiz Question 1)
-  │   ├── memory-2.jpg   (Optional: Photograph for Quiz Question 2)
-  │   ├── memory-3.jpg   (Optional: Photograph for Quiz Question 3)
-  │   └── memory-4.jpg   (Optional: Photograph for Quiz Question 4)
+  ├── images/            (Optional custom images)
   │
   └── media/
-      ├── birthday_video.mp4  (Your personal birthday video message for Chapter 7)
+      ├── birthday_video.mp4  (Your personal birthday video message for Chapter 6)
       ├── video_poster.jpg    (Optional: Preview thumbnail for the video)
       └── background_song.mp3 (Optional: Gentle romantic background music)
 ```
@@ -21,7 +17,7 @@ public/
 ## How to Configure:
 1. Copy your files into `public/images/` or `public/media/`.
 2. Open `src/config.js`.
-3. Update the matching path (e.g. `videoSrc: "/media/birthday_video.mp4"` or `photoSrc: "/images/memory-1.jpg"`).
+3. Update the matching path (e.g. `videoSrc: "/media/birthday_video.mp4"`).
 4. Save and rebuild with `npm run build`.
 
 > **Note on File Sizes:**

@@ -228,7 +228,7 @@ export class BackgroundParticles {
   }
 
   /**
-   * Grand celebration cascade across the screen (used for quiz completion)
+   * Grand celebration cascade across the screen
    */
   cascade(durationMs = 2000) {
     if (this.reducedMotion) return;

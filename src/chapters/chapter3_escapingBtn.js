@@ -7,7 +7,7 @@
  * progressively changing its text:
  *   "Sure? 😏" -> "??? 🤔" -> "Try again? 😜" -> "Think again! 😉"
  * After several attempts, it surrenders and transforms into a second "Yes!" button!
- * Clicking either "Yes!" button triggers floating hearts and advances to Chapter 4.
+ * Clicking either "Yes!" button triggers floating hearts and advances to Chapter 4 (Sapphire Garden).
  * ===================================================================
  */
 

@@ -10,7 +10,7 @@
 const STORAGE_KEY = 'sapphire_blossom_progress';
 
 export class ProgressManager {
-  constructor(totalChapters = 7, onChapterChange = null) {
+  constructor(totalChapters = 6, onChapterChange = null) {
     this.totalChapters = totalChapters;
     this.onChapterChange = onChapterChange;
     this.state = this.loadState();
@@ -21,12 +21,18 @@ export class ProgressManager {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        const currentChapter = Math.min(Math.max(parsed.currentChapter || 1, 1), this.totalChapters);
+        const rawUnlocked = Array.isArray(parsed.unlockedChapters) ? parsed.unlockedChapters : [1];
+        const unlockedChapters = rawUnlocked.filter((ch) => ch >= 1 && ch <= this.totalChapters);
+        if (!unlockedChapters.includes(1)) {
+          unlockedChapters.unshift(1);
+        }
+
         return {
-          currentChapter: parsed.currentChapter || 1,
-          unlockedChapters: parsed.unlockedChapters || [1],
+          currentChapter,
+          unlockedChapters,
           dateUnlocked: parsed.dateUnlocked || false,
           missYouCount: parsed.missYouCount || 0,
-          quizPassed: parsed.quizPassed || false,
         };
       }
     } catch (e) {
@@ -38,7 +44,6 @@ export class ProgressManager {
       unlockedChapters: [1],
       dateUnlocked: false,
       missYouCount: 0,
-      quizPassed: false,
     };
   }
 
@@ -98,13 +103,19 @@ export class ProgressManager {
     }
   }
 
+  previousChapter() {
+    const prev = this.state.currentChapter - 1;
+    if (prev >= 1) {
+      this.goToChapter(prev, true);
+    }
+  }
+
   resetProgress() {
     this.state = {
       currentChapter: 1,
       unlockedChapters: [1],
       dateUnlocked: false,
       missYouCount: 0,
-      quizPassed: false,
     };
     this.saveState();
     if (typeof this.onChapterChange === 'function') {
