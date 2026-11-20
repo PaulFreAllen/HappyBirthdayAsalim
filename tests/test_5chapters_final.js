@@ -73,32 +73,63 @@ async function runFinalVerificationSuite() {
       const sections = Array.from(document.querySelectorAll('.chapter-stage'));
       const hasQuiz = !!document.querySelector('.quiz-container');
       const hasVideo = !!document.querySelector('.birthday-video');
+      const hasLetter = !!document.querySelector('.letter-parchment');
 
       return {
         dotCount: dots.length,
-        dotTitles: dots.map(d => d.getAttribute('data-title')),
+        dotTitles: dots.map((d) => d.getAttribute('data-title')),
         sectionCount: sections.length,
-        sectionIds: sections.map(s => s.id),
+        sectionIds: sections.map((s) => s.id),
         hasQuiz,
         hasVideo,
+        hasLetter,
       };
     });
 
     assert(structure.dotCount === 5, `Expected 5 stepper dots, found ${structure.dotCount}`);
     assert(structure.sectionCount === 5, `Expected 5 chapter sections, found ${structure.sectionCount}`);
 
-    const expectedTitles = ['Date Lock', 'Blue Rose Garden', 'Personal Letter', 'Sand Portrait', 'Message'];
+    const expectedTitles = ['Countdown', 'Date Lock', 'Blue Rose Garden', 'Sand Portrait', 'Message'];
     const titlesMatch = JSON.stringify(structure.dotTitles) === JSON.stringify(expectedTitles);
     assert(titlesMatch, `Stepper dot titles: ${JSON.stringify(structure.dotTitles)}`);
 
-    assert(!structure.hasQuiz && !structure.hasVideo, 'Zero quiz or video elements present in DOM');
+    assert(
+      !structure.hasQuiz && !structure.hasVideo && !structure.hasLetter,
+      'Zero quiz, video, or letter elements present in DOM'
+    );
 
     // -----------------------------------------------------------
-    // TEST 2: Chapter 1 — Date Lock
+    // TEST 2: Chapter 1 — Opening Countdown (Particle Morph)
     // -----------------------------------------------------------
-    console.log('\n📌 Test 2: Verifying Chapter 1 (Date Lock)...');
-    const ch1Title = await page.$eval('#chapter-1 .lock-opening-title', el => el.textContent.trim());
-    assert(ch1Title === 'The day everything started', `Opening title matches: "${ch1Title}"`);
+    console.log('\n📌 Test 2: Verifying Chapter 1 (Opening Countdown Animation)...');
+    const ch1Canvases = await page.evaluate(() => {
+      const rain = document.getElementById('countdown-rain-canvas');
+      const fg = document.getElementById('countdown-fg-canvas');
+      return {
+        hasRain: !!rain && rain.width > 0,
+        hasFg: !!fg && fg.width > 0,
+      };
+    });
+    assert(ch1Canvases.hasRain && ch1Canvases.hasFg, 'Dual canvases for digital rain and particle morph are active');
+
+    // Skip/advance to Chapter 2 (Date Lock)
+    console.log('  Advancing from opening countdown to Chapter 2 (Date Lock)...');
+    await page.click('#btn-countdown-skip');
+    await page.waitForSelector('#chapter-2.active', { timeout: 6000 });
+    await sleep(600);
+
+    const ch2Active = await page.evaluate(() => {
+      const ch2 = document.getElementById('chapter-2');
+      return ch2 && ch2.classList.contains('active');
+    });
+    assert(ch2Active, 'Successfully transitioned to Chapter 2 (Date Lock)');
+
+    // -----------------------------------------------------------
+    // TEST 3: Chapter 2 — Date Lock ("The day everything started")
+    // -----------------------------------------------------------
+    console.log('\n📌 Test 3: Verifying Chapter 2 (Date Lock)...');
+    const ch2Title = await page.$eval('#chapter-2 .lock-opening-title', (el) => el.textContent.trim());
+    assert(ch2Title === 'The day everything started', `Opening title matches: "${ch2Title}"`);
 
     // Enter correct date: 18 / 07 / 2022
     await page.type('#lock-day', '18');
@@ -106,19 +137,20 @@ async function runFinalVerificationSuite() {
     await page.type('#lock-year', '2022');
     await page.click('#lock-submit-btn');
 
-    console.log('  Submitted date 18/07/2022, waiting for transition to Chapter 2...');
-    await sleep(2200);
+    console.log('  Submitted date 18/07/2022, waiting for transition to Chapter 3 (Blue Rose Garden)...');
+    await page.waitForSelector('#chapter-3.active', { timeout: 6000 });
+    await sleep(600);
 
-    const ch2Active = await page.evaluate(() => {
-      const ch2 = document.getElementById('chapter-2');
-      return ch2 && ch2.classList.contains('active');
+    const ch3Active = await page.evaluate(() => {
+      const ch3 = document.getElementById('chapter-3');
+      return ch3 && ch3.classList.contains('active');
     });
-    assert(ch2Active, 'Successfully transitioned to Chapter 2 (Blue Rose Garden)');
+    assert(ch3Active, 'Successfully transitioned to Chapter 3 (Blue Rose Garden)');
 
     // -----------------------------------------------------------
-    // TEST 3: Chapter 2 — Blue Rose Garden
+    // TEST 4: Chapter 3 — Blue Rose Garden
     // -----------------------------------------------------------
-    console.log('\n📌 Test 3: Verifying Chapter 2 (Blue Rose Garden message)...');
+    console.log('\n📌 Test 4: Verifying Chapter 3 (Blue Rose Garden)...');
     const gardenSvgPresent = await page.evaluate(() => {
       return !!document.getElementById('garden-stage-svg');
     });
@@ -127,78 +159,52 @@ async function runFinalVerificationSuite() {
     // Scrub through garden to reach epilogue card
     await page.evaluate(() => {
       const epilogue = document.getElementById('garden-epilogue-card');
+      const btn = document.getElementById('garden-continue-btn');
       if (epilogue) {
         epilogue.style.opacity = '1';
         epilogue.style.pointerEvents = 'auto';
       }
+      if (btn) {
+        btn.style.pointerEvents = 'auto';
+      }
     });
-    await sleep(400);
+    await sleep(500);
 
-    const gardenMsg1 = await page.$eval('.epilogue-phrase-1', el => el.textContent.trim());
-    const gardenMsg2 = await page.$eval('.epilogue-headline', el => el.textContent.trim());
+    const gardenMsg1 = await page.$eval('.epilogue-phrase-1', (el) => el.textContent.trim());
+    const gardenMsg2 = await page.$eval('.epilogue-headline', (el) => el.textContent.trim());
 
     assert(gardenMsg1 === "I couldn't bring you flowers today...", `Garden phrase 1 matches: "${gardenMsg1}"`);
     assert(gardenMsg2 === "I'm going to make that happen very soon.", `Garden phrase 2 matches: "${gardenMsg2}"`);
 
-    // Click "Open the letter ✉️"
-    console.log('  Clicking continue to Chapter 3 (Personal Letter)...');
+    // Click continue button -> should transition directly to Chapter 4 (Sand Portrait)
+    console.log('  Clicking continue to Chapter 4 (Sand Portrait Finale, skipping letter)...');
     await page.click('#garden-continue-btn');
-    await page.waitForSelector('#chapter-3.active', { timeout: 6000 });
+    await page.waitForSelector('#chapter-4.active', { timeout: 8000 });
     await sleep(800);
-
-    const ch3Active = await page.evaluate(() => {
-      const ch3 = document.getElementById('chapter-3');
-      return ch3 && ch3.classList.contains('active');
-    });
-    assert(ch3Active, 'Successfully transitioned to Chapter 3 (Personal Letter)');
-
-    // -----------------------------------------------------------
-    // TEST 4: Chapter 3 — Personal Letter
-    // -----------------------------------------------------------
-    console.log('\n📌 Test 4: Verifying Chapter 3 (Personal Letter for Asalim)...');
-    const waxSealPresent = await page.evaluate(() => !!document.getElementById('wax-seal'));
-    assert(waxSealPresent, '3D Envelope wax seal is present');
-
-    // Break seal to open letter
-    await page.click('#wax-seal');
-    await sleep(1600);
-
-    const letterSalutation = await page.$eval('.letter-salutation', el => el.textContent.trim());
-    const letterParagraphs = await page.$$eval('.letter-paragraph', els => els.map(e => e.textContent.trim()));
-
-    assert(letterSalutation === 'Asalim,', `Salutation matches: "${letterSalutation}"`);
-    assert(letterParagraphs[0] === "Another chapter of your life begins today, and we're one step closer to meeting each other.",
-      'Paragraph 1 matches verbatim');
-    assert(letterParagraphs[1] === "You are the most beautiful girl in the world. Everything about you — your voice, your heart, your eyes, every little thing about you, and your soul — is what I love.",
-      'Paragraph 2 matches verbatim');
-    assert(letterParagraphs[2] === "You deserve everything beautiful this life has to offer.",
-      'Paragraph 3 matches verbatim');
-    assert(letterParagraphs[3] === "I love you so much. Happy birthday, my love.",
-      'Paragraph 4 matches verbatim');
-
-    // Click continue button to Chapter 4 (Sand Portrait)
-    console.log('  Clicking continue to Chapter 4 (Sand Portrait)...');
-    await page.waitForSelector('.letter-parchment.is-open', { timeout: 3000 });
-    await sleep(400);
-    await page.click('#btn-letter-continue');
-    await page.waitForSelector('#chapter-4.active', { timeout: 5000 });
-    await sleep(600);
 
     const ch4Active = await page.evaluate(() => {
       const ch4 = document.getElementById('chapter-4');
       return ch4 && ch4.classList.contains('active');
     });
-    assert(ch4Active, 'Successfully transitioned to Chapter 4 (Sand Portrait)');
+    assert(ch4Active, 'Successfully transitioned directly to Chapter 4 (Sand Portrait)');
 
     // -----------------------------------------------------------
-    // TEST 5: Chapter 4 — Sand Portrait Birthday Finale
+    // TEST 5: Chapter 4 — Sand Portrait (No upload controls, locked to photo)
     // -----------------------------------------------------------
-    console.log('\n📌 Test 5: Verifying Chapter 4 (Sand Portrait & Completion Message)...');
+    console.log('\n📌 Test 5: Verifying Chapter 4 (Sand Portrait without upload UI)...');
+    const uploadControlsExist = await page.evaluate(() => {
+      const fileInput = !!document.getElementById('sand-file-input');
+      const dropOverlay = !!document.getElementById('sand-drop-overlay');
+      const customFileLabel = !!document.querySelector('.custom-file-label');
+      return fileInput || dropOverlay || customFileLabel;
+    });
+    assert(!uploadControlsExist, 'Picture-selection/upload interface is completely removed');
+
     const canvasExists = await page.evaluate(() => {
       const c = document.getElementById('sand-canvas');
       return c && c.width > 0 && c.height > 0;
     });
-    assert(canvasExists, 'Sand particle canvas is active and rendering');
+    assert(canvasExists, 'Sand particle canvas is active and rendering predefined portrait');
 
     // Verify birthday message is NOT shown initially
     const msgHiddenBeforeComplete = await page.evaluate(() => {
@@ -216,16 +222,20 @@ async function runFinalVerificationSuite() {
     });
     await sleep(600);
 
-    const birthdayText = await page.$eval('.sand-birthday-text', el => el.textContent.trim());
-    const isBannerVisible = await page.$eval('#sand-birthday-banner', el => window.getComputedStyle(el).display !== 'none');
+    const birthdayText = await page.$eval('.sand-birthday-text', (el) => el.textContent.trim());
+    const isBannerVisible = await page.$eval(
+      '#sand-birthday-banner',
+      (el) => window.getComputedStyle(el).display !== 'none'
+    );
 
     assert(isBannerVisible, 'Birthday banner is visible after portrait completion');
     assert(birthdayText === 'Happy Birthday, Asalim!', `Revealed birthday message matches: "${birthdayText}"`);
 
     // Click continue to Chapter 5 (Countdown & Message)
-    console.log('  Clicking continue to Chapter 5 (Countdown & Message)...');
+    console.log('  Clicking continue to Chapter 5 (Final Countdown & Message)...');
     await page.click('#sand-btn-to-countdown');
-    await sleep(1500);
+    await page.waitForSelector('#chapter-5.active', { timeout: 5000 });
+    await sleep(800);
 
     const ch5Active = await page.evaluate(() => {
       const ch5 = document.getElementById('chapter-5');
@@ -237,9 +247,9 @@ async function runFinalVerificationSuite() {
     // TEST 6: Chapter 5 — Countdown and Message Interaction
     // -----------------------------------------------------------
     console.log('\n📌 Test 6: Verifying Chapter 5 (Countdown & Message-Writing Interaction)...');
-    
+
     // Check countdown display exists
-    const countdownNumber = await page.$eval('#countdown-display', el => el.textContent.trim());
+    const countdownNumber = await page.$eval('#countdown-display', (el) => el.textContent.trim());
     console.log(`  Initial countdown number displayed: ${countdownNumber}`);
     assert(['5', '4', '3', '2', '1'].includes(countdownNumber), `Countdown started with number: ${countdownNumber}`);
 
@@ -271,7 +281,7 @@ async function runFinalVerificationSuite() {
     const savedInStorage = await page.evaluate(() => {
       return localStorage.getItem('sapphire_blossom_written_message');
     });
-    const feedbackText = await page.$eval('#message-feedback', el => el.textContent.trim());
+    const feedbackText = await page.$eval('#message-feedback', (el) => el.textContent.trim());
 
     assert(savedInStorage === 'With all my heart, forever and always. - P', 'Message safely stored in localStorage');
     assert(feedbackText === 'Your message has been saved with love ✨', `Feedback confirmed: "${feedbackText}"`);
@@ -283,7 +293,7 @@ async function runFinalVerificationSuite() {
     await page.setViewport({ width: 375, height: 812, isMobile: true });
     await sleep(600);
 
-    // If mobile viewport reset the stage, ensure message stage is displayed
+    // Ensure message stage is displayed for mobile width check
     await page.evaluate(() => {
       const msg = document.getElementById('message-stage');
       const count = document.getElementById('countdown-stage');
@@ -295,18 +305,21 @@ async function runFinalVerificationSuite() {
     });
     await sleep(300);
 
-    const mobileMessageCardWidth = await page.$eval('.message-card', el => el.offsetWidth);
-    assert(mobileMessageCardWidth <= 375 && mobileMessageCardWidth > 200,
-      `Mobile message card width is responsive (${mobileMessageCardWidth}px)`);
+    const mobileMessageCardWidth = await page.$eval('.message-card', (el) => el.offsetWidth);
+    assert(
+      mobileMessageCardWidth <= 375 && mobileMessageCardWidth > 200,
+      `Mobile message card width is responsive (${mobileMessageCardWidth}px)`
+    );
 
-    const relevantErrors = consoleErrors.filter(e => !e.includes('favicon'));
-    assert(relevantErrors.length === 0,
-      `Console errors encountered: ${relevantErrors.length === 0 ? 'None (0)' : JSON.stringify(relevantErrors)}`);
+    const relevantErrors = consoleErrors.filter((e) => !e.includes('favicon'));
+    assert(
+      relevantErrors.length === 0,
+      `Console errors encountered: ${relevantErrors.length === 0 ? 'None (0)' : JSON.stringify(relevantErrors)}`
+    );
 
     console.log(`\n==================================================`);
     console.log(`🎉 FINAL VERIFICATION SUMMARY: ${passCount} / ${totalTests} TESTS PASSED`);
     console.log(`==================================================\n`);
-
   } catch (err) {
     console.error('💥 Test suite failed:', err);
     process.exit(1);

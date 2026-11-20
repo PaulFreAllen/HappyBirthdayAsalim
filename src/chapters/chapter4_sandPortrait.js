@@ -77,18 +77,6 @@ export function createChapter4(app) {
         <!-- Interactive Fullscreen Sand Canvas -->
         <canvas id="sand-canvas" class="sand-canvas"></canvas>
 
-        <!-- Drop overlay for custom photo testing -->
-        <div id="sand-drop-overlay" class="sand-drop-overlay">
-          <div class="sand-drop-content">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="17 8 12 3 7 8"/>
-              <line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-            <p>Drop a photo to transform it into stardust</p>
-          </div>
-        </div>
-
         <!-- Atmospheric Chapter Title Bar (Gentle Top Floating) -->
         <header class="sand-header">
           <span class="chapter-badge">${badge}</span>
@@ -127,57 +115,6 @@ export function createChapter4(app) {
                 <label for="sand-rv" class="sand-scrub-label">Formation</label>
                 <input id="sand-rv" class="sand-range-slider" type="range" min="0" max="1000" step="1" value="0" aria-label="Formation scrub progress" />
                 <span id="sand-rv-o" class="sand-scrub-value">0%</span>
-              </div>
-
-              <button id="sand-btn-toggle-panel" class="btn-glass icon-btn-text" aria-expanded="false" title="Fine-tune sand particle parameters">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                </svg>
-                <span id="sand-toggle-label">Settings</span>
-              </button>
-            </div>
-
-            <!-- Expandable Advanced Settings Panel -->
-            <div id="sand-advanced-panel" class="sand-advanced-drawer closed">
-              <div class="sand-panel-grid">
-                <div class="sand-param-row">
-                  <span>Points</span>
-                  <input id="sand-pts" type="range" min="10000" max="150000" step="5000" value="${CFG.MAX_POINTS}" />
-                  <output id="sand-pts-o">${Math.round(CFG.MAX_POINTS / 1000)}k</output>
-                </div>
-                <div class="sand-param-row">
-                  <span>Turbulence</span>
-                  <input id="sand-nz" type="range" min="0" max="3" step="0.05" value="${CFG.NOISE_SPEED}" />
-                  <output id="sand-nz-o">${CFG.NOISE_SPEED.toFixed(2)}</output>
-                </div>
-                <div class="sand-param-row">
-                  <span>Point Size</span>
-                  <input id="sand-ps" type="range" min="1" max="3" step="0.5" value="${CFG.POINT_SIZE}" />
-                  <output id="sand-ps-o">${CFG.POINT_SIZE}</output>
-                </div>
-                <div class="sand-param-row">
-                  <span>Gamma</span>
-                  <input id="sand-gm" type="range" min="0.5" max="2.5" step="0.05" value="${CFG.GAMMA}" />
-                  <output id="sand-gm-o">${CFG.GAMMA.toFixed(2)}</output>
-                </div>
-              </div>
-
-              <div class="sand-panel-footer">
-                <label class="btn-subtle custom-file-label" for="sand-file-input">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                    <polyline points="21 15 16 10 5 21"/>
-                  </svg>
-                  <span>Load Custom Photo</span>
-                </label>
-                <input id="sand-file-input" type="file" accept="image/*" style="display: none;" />
-
-                <label class="sand-chk-label">
-                  <input id="sand-inv" type="checkbox" ${CFG.INVERT ? 'checked' : ''} />
-                  <span>Invert Colors</span>
-                </label>
               </div>
             </div>
 
@@ -592,18 +529,6 @@ export function createChapter4(app) {
     im.src = srcUrl;
   }
 
-  function loadCustomFile(file) {
-    if (!file || !file.type.startsWith('image/')) return;
-    const im = new Image();
-    im.onload = () => {
-      capFrac = 1;
-      setSource(im, im.naturalWidth, im.naturalHeight);
-      URL.revokeObjectURL(im.src);
-      restart();
-    };
-    im.src = URL.createObjectURL(file);
-  }
-
   function bindEvents() {
     const btnRestart = document.getElementById('sand-btn-restart');
     if (btnRestart) {
@@ -631,88 +556,6 @@ export function createChapter4(app) {
         playing = false;
         prog = e.target.value / 1000;
         if (rv_o) rv_o.textContent = Math.round(prog * 100) + '%';
-      });
-    }
-
-    // Toggle advanced settings drawer
-    const btnToggle = document.getElementById('sand-btn-toggle-panel');
-    const panel = document.getElementById('sand-advanced-panel');
-    const toggleLabel = document.getElementById('sand-toggle-label');
-    if (btnToggle && panel) {
-      btnToggle.addEventListener('click', () => {
-        const isClosed = panel.classList.toggle('closed');
-        btnToggle.setAttribute('aria-expanded', !isClosed);
-        if (toggleLabel) toggleLabel.textContent = isClosed ? 'Settings' : 'Close';
-      });
-    }
-
-    const bindControl = (id, key, fmt, onChange) => {
-      const el_ = document.getElementById(id);
-      const out_ = document.getElementById(id + '-o');
-      if (!el_) return;
-      const show = () => {
-        if (out_) out_.textContent = fmt(CFG[key]);
-      };
-      el_.value = CFG[key];
-      show();
-      el_.addEventListener(onChange ? 'change' : 'input', () => {
-        CFG[key] = parseFloat(el_.value);
-        show();
-        if (onChange) onChange();
-      });
-    };
-
-    bindControl('sand-pts', 'MAX_POINTS', (v) => Math.round(v / 1000) + 'k', alloc);
-    bindControl('sand-nz', 'NOISE_SPEED', (v) => v.toFixed(2));
-    bindControl('sand-ps', 'POINT_SIZE', (v) => v);
-    bindControl('sand-gm', 'GAMMA', (v) => v.toFixed(2), () => {
-      if (hasSrc) buildTargets();
-    });
-
-    const inv = document.getElementById('sand-inv');
-    if (inv) {
-      inv.addEventListener('change', (e) => {
-        CFG.INVERT = e.target.checked;
-        if (hasSrc) buildTargets();
-      });
-    }
-
-    const fileInput = document.getElementById('sand-file-input');
-    if (fileInput) {
-      fileInput.addEventListener('change', (e) => {
-        if (e.target.files && e.target.files[0]) {
-          loadCustomFile(e.target.files[0]);
-        }
-      });
-    }
-
-    const dropOverlay = document.getElementById('sand-drop-overlay');
-    const container = document.getElementById('chapter-4');
-
-    if (container && dropOverlay) {
-      container.addEventListener('dragenter', (e) => {
-        e.preventDefault();
-        dragCounter++;
-        dropOverlay.classList.add('active');
-      });
-
-      container.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        if (--dragCounter <= 0) {
-          dragCounter = 0;
-          dropOverlay.classList.remove('active');
-        }
-      });
-
-      container.addEventListener('dragover', (e) => e.preventDefault());
-
-      container.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dragCounter = 0;
-        dropOverlay.classList.remove('active');
-        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
-          loadCustomFile(e.dataTransfer.files[0]);
-        }
       });
     }
 

@@ -2,12 +2,12 @@
  * ===================================================================
  * SAPPHIRE BLOSSOM — CENTRAL PERSONALIZATION CONFIGURATION
  * ===================================================================
- * Finalized Content and 5-Chapter Organization:
- * 1. Date Lock ("The day everything started" - 18.07.2022)
- * 2. Blue Rose Garden ("I couldn't bring you flowers today..." -> "I'm going to make that happen very soon.")
- * 3. Personal Letter (Exact letter for Asalim)
+ * Finalized 5-Chapter Architecture:
+ * 1. Opening Countdown Animation (Particle Morph 3 -> 2 -> 1 -> You -> Are -> My -> Love -> Heart)
+ * 2. Date Lock ("The day everything started" - 18.07.2022)
+ * 3. Blue Rose Garden ("I couldn't bring you flowers today..." -> "I'm going to make that happen very soon.")
  * 4. Sand Portrait Finale (Reveals "Happy Birthday, Asalim!" on completion)
- * 5. Countdown and Message Interaction (5 -> 4 -> 3 -> 2 -> 1, message-writing interaction)
+ * 5. Final Countdown & Message Interaction (5 -> 4 -> 3 -> 2 -> 1, message-writing interaction)
  * ===================================================================
  */
 
@@ -34,9 +34,21 @@ export const config = {
   },
 
   // -----------------------------------------------------------------
-  // CHAPTER 1: DATE LOCK
+  // CHAPTER 1: OPENING COUNTDOWN & PARTICLE MORPH
   // -----------------------------------------------------------------
   chapter1: {
+    badge: "Prologue",
+    title: "Particle Rain",
+    numbers: ['3', '2', '1'],
+    phrases: ['You', 'Are', 'My', 'Love'],
+    finaleCaption: "Forever yours",
+    continueButtonText: "Begin our journey ✨",
+  },
+
+  // -----------------------------------------------------------------
+  // CHAPTER 2: DATE LOCK
+  // -----------------------------------------------------------------
+  chapter2: {
     badge: "Chapter I",
     title: "The day everything started",
     quote1: "Some dates are just dates. Others become memories that stay with us.",
@@ -61,9 +73,9 @@ export const config = {
   },
 
   // -----------------------------------------------------------------
-  // CHAPTER 2: BLUE ROSE GARDEN
+  // CHAPTER 3: BLUE ROSE GARDEN
   // -----------------------------------------------------------------
-  chapter2: {
+  chapter3: {
     badge: "Chapter II",
     title: "Sapphire Blossom",
     prologue1: "I couldn't bring you flowers today...",
@@ -72,39 +84,18 @@ export const config = {
     epilogue1: "I couldn't bring you flowers today...",
     epilogue2: "I'm going to make that happen very soon.",
     epilogue3: "",
-    continueButtonText: "Open the letter ✉️",
-  },
-
-  // -----------------------------------------------------------------
-  // CHAPTER 3: PERSONAL LETTER
-  // -----------------------------------------------------------------
-  chapter3: {
-    badge: "Chapter III",
-    title: "A Letter For You",
-    envelopeLabel: "For my favorite person",
-    letter: {
-      salutation: "Asalim,",
-      paragraphs: [
-        "Another chapter of your life begins today, and we're one step closer to meeting each other.",
-        "You are the most beautiful girl in the world. Everything about you — your voice, your heart, your eyes, every little thing about you, and your soul — is what I love.",
-        "You deserve everything beautiful this life has to offer.",
-        "I love you so much. Happy birthday, my love.",
-      ],
-      closing: "",
-      signature: "",
-    },
-    continueButtonText: "One Last Surprise ✨",
+    continueButtonText: "Continue to our portrait ✨",
   },
 
   // -----------------------------------------------------------------
   // CHAPTER 4: SAND PORTRAIT FINALE
   // -----------------------------------------------------------------
   chapter4: {
-    badge: "Chapter IV",
+    badge: "Chapter III",
     title: "Sand Portrait",
     subtitle: "Carved in stardust and memory...",
     birthdayMessage: "Happy Birthday, Asalim!",
-    continueButtonText: "Continue ✨",
+    continueButtonText: "Continue to Countdown ✨",
     caption: DEFAULT_SAND_CAPTION,
     photoSrc: DEFAULT_SAND_PHOTO,
     duration: 16,
@@ -116,7 +107,7 @@ export const config = {
   // CHAPTER 5: COUNTDOWN AND MESSAGE INTERACTION
   // -----------------------------------------------------------------
   chapter5: {
-    badge: "Chapter V",
+    badge: "Chapter IV",
     countdownStart: 5,
     placeholder: "Write your message here...",
     submitButtonText: "Save Message ✨",

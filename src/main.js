@@ -12,9 +12,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { config } from './config.js';
 import { BackgroundParticles } from './components/backgroundParticles.js';
 import { ProgressManager } from './components/progressManager.js';
-import { createChapter1 } from './chapters/chapter1_dateLock.js';
-import { createChapter2 } from './chapters/chapter2_garden.js';
-import { createChapter3 } from './chapters/chapter3_letter.js';
+import { createChapter1 } from './chapters/chapter1_openingCountdown.js';
+import { createChapter2 } from './chapters/chapter2_dateLock.js';
+import { createChapter3 } from './chapters/chapter3_garden.js';
 import { createChapter4 } from './chapters/chapter4_sandPortrait.js';
 import { createChapter5 } from './chapters/chapter5_countdownMessage.js';
 

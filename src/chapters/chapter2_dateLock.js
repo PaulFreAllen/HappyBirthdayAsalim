@@ -2,10 +2,12 @@
  * ===================================================================
  * CHAPTER 2 — THE DATE LOCK
  * ===================================================================
- * Interactive celestial vault lock.
- * Prompts visitor to enter the memorable relationship date.
- * Features auto-advancing segmented numeric tumblers, progressive
- * affectionate hints, skip support, and satisfying unlock mechanics.
+ * "The day everything started"
+ * Features:
+ * - Interactive celestial vault lock
+ * - Segmented date tumbler inputs (Day, Month, Year: 18.07.2022)
+ * - Auto-advancing focus, error feedback, and progressive hints
+ * - Smooth transition into Chapter 3 (Blue Rose Garden) upon unlocking
  * ===================================================================
  */
 
@@ -13,9 +15,16 @@ import { gsap } from 'gsap';
 import { config } from '../config.js';
 
 export function getDateLockHTML() {
+  const lockConfig = config.chapter2 || {};
+
   return `
     <div class="glass-card lock-container">
-      <!-- Celestial Lock SVG Graphic -->
+      <div class="lock-header">
+        <span class="chapter-badge">${lockConfig.badge || 'Chapter I'}</span>
+        <h1 class="chapter-title lock-opening-title">${lockConfig.title || 'The day everything started'}</h1>
+      </div>
+
+      <!-- Celestial Lock Graphic -->
       <div class="lock-vault-graphic" aria-hidden="true">
         <svg class="lock-svg" viewBox="0 0 100 100" fill="none">
           <circle cx="50" cy="50" r="46" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5" stroke-dasharray="4 4" />
@@ -27,8 +36,8 @@ export function getDateLockHTML() {
         </svg>
       </div>
 
-      <h2 class="lock-quote-main">"${config.chapter2.quote1}"</h2>
-      <p class="lock-quote-sub">${config.chapter2.quote2}</p>
+      <h2 class="lock-quote-main">"${lockConfig.quote1 || 'Some dates are just dates. Others become memories that stay with us.'}"</h2>
+      <p class="lock-quote-sub">${lockConfig.quote2 || 'Can you remember this one?'}</p>
 
       <!-- Segmented Date Tumbler Inputs -->
       <form id="date-lock-form" class="date-lock-form" novalidate onsubmit="return false;">
@@ -42,13 +51,13 @@ export function getDateLockHTML() {
               inputmode="numeric" 
               pattern="[0-9]*" 
               maxlength="2" 
-              placeholder="DD" 
-              autocomplete="off" 
-              required 
+              placeholder="DD"
+              autocomplete="off"
+              aria-label="Two-digit day"
             />
           </div>
 
-          <span class="date-separator" aria-hidden="true">/</span>
+          <span class="date-separator">.</span>
 
           <div class="date-input-group">
             <label for="lock-month" class="date-input-label">Month</label>
@@ -59,43 +68,45 @@ export function getDateLockHTML() {
               inputmode="numeric" 
               pattern="[0-9]*" 
               maxlength="2" 
-              placeholder="MM" 
-              autocomplete="off" 
-              required 
+              placeholder="MM"
+              autocomplete="off"
+              aria-label="Two-digit month"
             />
           </div>
 
-          <span class="date-separator" aria-hidden="true">/</span>
+          <span class="date-separator">.</span>
 
           <div class="date-input-group">
             <label for="lock-year" class="date-input-label">Year</label>
             <input 
               id="lock-year" 
-              class="date-tumbler-input" 
+              class="date-tumbler-input input-year" 
               type="text" 
               inputmode="numeric" 
               pattern="[0-9]*" 
               maxlength="4" 
-              placeholder="YYYY" 
-              autocomplete="off" 
-              required 
+              placeholder="YYYY"
+              autocomplete="off"
+              aria-label="Four-digit year"
             />
           </div>
         </div>
 
+        <!-- Action Buttons -->
         <div class="lock-actions">
-          <button id="lock-submit-btn" type="submit" class="btn-glow">
-            <span>Unlock ✨</span>
+          <button id="lock-submit-btn" class="btn-glow" type="button">
+            <span>Unlock Memories ✨</span>
           </button>
+        </div>
 
-          <div id="lock-feedback" class="lock-feedback-msg" role="status" aria-live="polite"></div>
+        <!-- Dynamic Feedback Status Message -->
+        <div id="lock-feedback-msg" class="lock-feedback" role="status" aria-live="polite"></div>
 
-          <div id="lock-hint" class="lock-hint-box" style="display: none;" aria-live="polite">
-            ${config.chapter2.hintText}
-          </div>
-
-          <button id="lock-skip-btn" type="button" class="lock-skip-btn">
-            ${config.chapter2.skipText}
+        <!-- Progressive Romantic Hint / Skip Box -->
+        <div id="lock-hint-box" class="lock-hint-box" style="display: none;">
+          <p id="lock-hint-text" class="lock-hint-text"></p>
+          <button id="lock-skip-btn" class="btn-subtle" type="button">
+            <span>${lockConfig.skipText || "Can't remember right now? Let me help you through ✨"}</span>
           </button>
         </div>
       </form>
@@ -104,19 +115,24 @@ export function getDateLockHTML() {
 }
 
 export function bindDateLockEvents(container, app) {
+  const lockConfig = config.chapter2 || {};
+  const targetDate = lockConfig.targetDate || { day: '18', month: '07', year: '2022' };
+
+  const inputDay = container.querySelector('#lock-day');
+  const inputMonth = container.querySelector('#lock-month');
+  const inputYear = container.querySelector('#lock-year');
+  const submitBtn = container.querySelector('#lock-submit-btn');
+  const feedbackMsg = container.querySelector('#lock-feedback-msg');
+  const hintBox = container.querySelector('#lock-hint-box');
+  const hintText = container.querySelector('#lock-hint-text');
+  const skipBtn = container.querySelector('#lock-skip-btn');
+  const shackle = container.querySelector('.lock-shackle');
+
   let failedAttempts = 0;
   let isUnlocked = false;
 
-  const dayInput = container.querySelector('#lock-day') || document.getElementById('lock-day');
-  const monthInput = container.querySelector('#lock-month') || document.getElementById('lock-month');
-  const yearInput = container.querySelector('#lock-year') || document.getElementById('lock-year');
-  const form = container.querySelector('#date-lock-form') || document.getElementById('date-lock-form');
-  const skipBtn = container.querySelector('#lock-skip-btn') || document.getElementById('lock-skip-btn');
-
-  if (!dayInput || !monthInput || !yearInput || !form) return;
-
-  function setupAutoAdvance(currentInput, nextInput, maxLen) {
-    currentInput.addEventListener('input', () => {
+  const autoAdvance = (currentInput, nextInput, maxLen) => {
+    currentInput.addEventListener('input', (e) => {
       currentInput.value = currentInput.value.replace(/\D/g, '');
       if (currentInput.value.length >= maxLen && nextInput) {
         nextInput.focus();
@@ -126,145 +142,151 @@ export function bindDateLockEvents(container, app) {
 
     currentInput.addEventListener('keydown', (e) => {
       if (e.key === 'Backspace' && currentInput.value.length === 0) {
-        const prev = currentInput.parentElement.previousElementSibling?.previousElementSibling?.querySelector('input');
-        if (prev) {
-          prev.focus();
+        const prevInput = currentInput === inputYear ? inputMonth : currentInput === inputMonth ? inputDay : null;
+        if (prevInput) {
+          prevInput.focus();
         }
       }
+      if (e.key === 'Enter') {
+        attemptUnlock();
+      }
     });
-  }
+  };
 
-  setupAutoAdvance(dayInput, monthInput, 2);
-  setupAutoAdvance(monthInput, yearInput, 2);
-  setupAutoAdvance(yearInput, null, 4);
+  autoAdvance(inputDay, inputMonth, 2);
+  autoAdvance(inputMonth, inputYear, 2);
+  autoAdvance(inputYear, null, 4);
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    handleUnlockAttempt();
-  });
+  submitBtn?.addEventListener('click', attemptUnlock);
 
-  const submitBtn = container.querySelector('#lock-submit-btn') || document.getElementById('lock-submit-btn');
-  if (submitBtn) {
-    submitBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      handleUnlockAttempt();
-    });
-  }
+  skipBtn?.addEventListener('click', () => {
+    inputDay.value = targetDate.day;
+    inputMonth.value = targetDate.month;
+    inputYear.value = targetDate.year;
 
-  if (skipBtn) {
-    skipBtn.addEventListener('click', () => {
-      handleGentleSkip();
-    });
-  }
-
-  function handleUnlockAttempt() {
-    if (isUnlocked) return;
-
-    const feedback = container.querySelector('#lock-feedback') || document.getElementById('lock-feedback');
-    const card = container.querySelector('.lock-container') || document.querySelector('.lock-container');
-
-    const dayVal = dayInput?.value.trim() || '';
-    const monthVal = monthInput?.value.trim() || '';
-    const yearVal = yearInput?.value.trim() || '';
-
-    if (!dayVal || !monthVal || !yearVal) {
-      setFeedback('Please enter the day, month, and year 💭', 'var(--gold-glow)');
-      shakeElement(card);
-      return;
-    }
-
-    const enteredDay = parseInt(dayVal, 10);
-    const enteredMonth = parseInt(monthVal, 10);
-    const enteredYear = parseInt(yearVal, 10);
-
-    if (enteredMonth < 1 || enteredMonth > 12 || enteredDay < 1 || enteredDay > 31 || enteredYear < 1900 || enteredYear > 2100) {
-      setFeedback('Please check the date numbers again 💫', 'var(--gold-glow)');
-      shakeElement(card);
-      return;
-    }
-
-    const target = config.chapter2.targetDate;
-    const isCorrect = (
-      enteredYear === parseInt(target.year, 10) &&
-      enteredMonth === parseInt(target.month, 10) &&
-      enteredDay === parseInt(target.day, 10)
+    showFeedback(
+      lockConfig.skipRevealMessage || "July 18, 2022 — the day our beautiful relationship began. Always right here in my heart. ✨",
+      'var(--cyan-glow)'
     );
 
-    if (isCorrect) {
-      triggerSuccessUnlock(config.chapter2.successMessage);
-    } else {
-      failedAttempts++;
-      shakeElement(card);
+    setTimeout(() => {
+      unlockVault();
+    }, 1200);
+  });
 
-      if (app.particles && card) {
-        const rect = card.getBoundingClientRect();
-        app.particles.burst(rect.left + rect.width / 2, rect.top + rect.height * 0.42, 20, { palette: 'error', speed: 0.85 });
-      }
-
-      const msgs = config.chapter2.errorMessages;
-      const msgIndex = (failedAttempts - 1) % msgs.length;
-      setFeedback(msgs[msgIndex], 'var(--cyan-subtle)');
-
-      if (failedAttempts >= config.chapter2.hintAfterFailedAttempts) {
-        const hintBox = container.querySelector('#lock-hint') || document.getElementById('lock-hint');
-        if (hintBox && hintBox.style.display === 'none') {
-          hintBox.style.display = 'block';
-          gsap.fromTo(hintBox, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6 });
-        }
-      }
-    }
-  }
-
-  function handleGentleSkip() {
+  function attemptUnlock() {
     if (isUnlocked) return;
 
-    const target = config.chapter2.targetDate;
-    if (dayInput && monthInput && yearInput) {
-      dayInput.value = String(target.day).padStart(2, '0');
-      monthInput.value = String(target.month).padStart(2, '0');
-      yearInput.value = String(target.year);
+    const day = inputDay.value.trim().padStart(2, '0');
+    const month = inputMonth.value.trim().padStart(2, '0');
+    const year = inputYear.value.trim();
 
-      gsap.fromTo([dayInput, monthInput, yearInput], 
-        { scale: 0.9, backgroundColor: 'rgba(56, 189, 248, 0.3)' },
-        { scale: 1, backgroundColor: 'rgba(8, 15, 36, 0.85)', duration: 0.5, stagger: 0.1 }
-      );
+    if (!day || !month || !year || year.length < 4) {
+      showFeedback('Please enter the full date 💭', 'var(--gold-glow)');
+      shakeElement(container.querySelector('.date-inputs-wrapper'));
+      return;
     }
 
-    triggerSuccessUnlock(config.chapter2.skipRevealMessage);
+    if (day === targetDate.day && month === targetDate.month && year === targetDate.year) {
+      unlockVault();
+    } else {
+      handleFailedAttempt();
+    }
   }
 
-  function triggerSuccessUnlock(message) {
+  function handleFailedAttempt() {
+    failedAttempts++;
+
+    const errors = lockConfig.errorMessages || [
+      'Hmm, close... but not quite! Think back 💭',
+      "Nice guess, but that's not our magic day! 😉",
+      'Are you sure? Try searching your heart again 🔍',
+    ];
+    const errorMsg = errors[(failedAttempts - 1) % errors.length];
+
+    showFeedback(errorMsg, '#f87171');
+    shakeElement(container.querySelector('.lock-container'));
+
+    [inputDay, inputMonth, inputYear].forEach((input) => {
+      input.classList.add('input-error');
+      setTimeout(() => input.classList.remove('input-error'), 1200);
+    });
+
+    if (failedAttempts >= (lockConfig.hintAfterFailedAttempts || 3) && hintBox) {
+      hintBox.style.display = 'block';
+      if (hintText) {
+        hintText.textContent =
+          lockConfig.hintText ||
+          "💡 Hint: That unforgettable July day in 2022 when we officially became 'us'... ✨";
+      }
+      gsap.fromTo(hintBox, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 });
+    }
+  }
+
+  function unlockVault() {
     isUnlocked = true;
-    setFeedback(message, 'var(--cyan-glow)');
 
-    const shackle = container.querySelector('.lock-shackle') || document.querySelector('.lock-shackle');
-    const lockSvg = container.querySelector('.lock-svg') || document.querySelector('.lock-svg');
-    const submitBtn = container.querySelector('#lock-submit-btn') || document.getElementById('lock-submit-btn');
-    const skipBtnEl = container.querySelector('#lock-skip-btn') || document.getElementById('lock-skip-btn');
-
+    [inputDay, inputMonth, inputYear].forEach((inp) => {
+      inp.disabled = true;
+      inp.classList.add('input-success');
+    });
     if (submitBtn) submitBtn.disabled = true;
-    if (skipBtnEl) skipBtnEl.style.display = 'none';
+
+    showFeedback(
+      lockConfig.successMessage || 'You remembered. The lock clicks open... ✨',
+      'var(--cyan-glow)'
+    );
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        app.progress.nextChapter();
+      },
+    });
 
     if (shackle) {
-      shackle.classList.add('open');
-    }
-    if (lockSvg) {
-      lockSvg.classList.add('unlocked');
-    }
-
-    const graphic = container.querySelector('.lock-vault-graphic') || document.querySelector('.lock-vault-graphic');
-    if (graphic && app.particles) {
-      const rect = graphic.getBoundingClientRect();
-      app.particles.burst(rect.left + rect.width / 2, rect.top + rect.height / 2, 80);
+      tl.to(shackle, {
+        y: -14,
+        rotation: -20,
+        transformOrigin: 'top right',
+        duration: 0.65,
+        ease: 'back.out(2)',
+      });
     }
 
-    gsap.delayedCall(1.6, () => {
-      app.progress.goToChapter(3, true);
-    });
+    tl.to(
+      container.querySelector('.lock-vault-graphic'),
+      {
+        scale: 1.15,
+        filter: 'drop-shadow(0 0 25px rgba(0, 240, 255, 0.8))',
+        duration: 0.5,
+      },
+      '-=0.3'
+    );
+
+    if (app.particles) {
+      const rect = container.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height * 0.35;
+      app.particles.burst(cx, cy, 60, { palette: 'sapphire', speed: 1.6 });
+      app.particles.burst(cx, cy, 30, { palette: 'gold', speed: 1.2 });
+    }
+
+    tl.to(
+      container.querySelector('.lock-container'),
+      {
+        opacity: 0,
+        y: -30,
+        scale: 0.95,
+        filter: 'blur(8px)',
+        duration: 0.8,
+        ease: 'power2.inOut',
+      },
+      '+=0.6'
+    );
   }
 
-  function setFeedback(msg, color) {
-    const el = container.querySelector('#lock-feedback') || document.getElementById('lock-feedback');
+  function showFeedback(msg, color) {
+    const el = feedbackMsg;
     if (!el) return;
     el.textContent = msg;
     el.style.color = color;
@@ -296,5 +318,6 @@ export function createChapter2(app) {
         setTimeout(() => firstInput.focus(), 300);
       }
     },
+    unmount() {},
   };
 }

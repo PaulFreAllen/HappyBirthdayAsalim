@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * CHAPTER 2 — SAPPHIRE BLOSSOM: BLUE ROSE GARDEN
+ * CHAPTER 3 — SAPPHIRE BLOSSOM: BLUE ROSE GARDEN
  * ===================================================================
  * Features:
  * - Prologue introduction with poetic reveal
@@ -12,6 +12,7 @@
  * - Emotional epilogue revelation:
  *   "I couldn't bring you flowers today..."
  *   "I'm going to make that happen very soon."
+ * - Advances directly to Chapter 4 (Sand Portrait Finale)
  * ===================================================================
  */
 
@@ -22,61 +23,61 @@ import { getRoseGradients, createRoseSVG } from './garden/roseGenerator.js';
 import { getGardenComposition } from './garden/gardenLayout.js';
 import { createGrowthTimeline } from './garden/flowerGrowth.js';
 
-export function createChapter2(app) {
+export function createChapter3(app) {
   let scrollTriggerInstance = null;
   let growthTimeline = null;
   let idleAnimationId = null;
   let isIdleActive = false;
   let roseConfigs = [];
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const gardenConfig = config.chapter2;
+  const reducedMotion = app.reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const gardenConfig = config.chapter3 || {};
 
   function render() {
-    const container = document.getElementById('chapter-2');
+    const container = document.getElementById('chapter-3');
     if (!container) return;
 
     // Get responsive composition based on screen width
     const viewWidth = window.innerWidth;
-    roseConfigs = getGardenComposition(viewWidth, window.innerHeight);
+    roseConfigs = getGardenComposition(viewWidth);
 
-    // Build SVG roses
+    // Render individual rose SVG trees
     const rosesSvgString = roseConfigs.map((cfg) => createRoseSVG(cfg)).join('\n');
 
     container.innerHTML = `
-      <!-- Pinned Scroll Track Container (360vh scroll depth for smooth scrub) -->
       <div id="garden-scroll-track" class="garden-scroll-track">
-        <!-- Pinned Stage Viewport -->
         <div id="garden-viewport" class="garden-viewport">
           
-          <!-- Opening Poetic Prologue -->
-          <div id="garden-prologue" class="garden-prologue-overlay">
-            <p class="prologue-line line-1">"${gardenConfig.prologue1}"</p>
-            <p class="prologue-line line-2">"${gardenConfig.prologue2}"</p>
-            <div class="scroll-prompt-hint">
-              <span>${gardenConfig.seedPrompt}</span>
-              <svg class="scroll-arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14M19 12l-7 7-7-7"/>
-              </svg>
+          <!-- Ambient Bioluminescent Lighting -->
+          <div class="garden-atmospheric-aura" aria-hidden="true"></div>
+
+          <!-- Poetic Prologue -->
+          <div id="garden-prologue" class="garden-prologue">
+            <span class="chapter-badge">${gardenConfig.badge || 'Chapter II'}</span>
+            <h1 class="garden-title">${gardenConfig.title || 'Sapphire Blossom'}</h1>
+            <p class="garden-subtitle">${gardenConfig.prologue1 || "I couldn't bring you flowers today..."}</p>
+            <p class="garden-tagline">${gardenConfig.prologue2 || "I'm going to make that happen very soon."}</p>
+            <div class="scroll-cue">
+              <span class="scroll-chevron"></span>
+              <span>${gardenConfig.seedPrompt || 'Scroll gently to nurture the blossom ↓'}</span>
             </div>
           </div>
 
-          <!-- Atmospheric Sapphire Aura Overlay -->
-          <div class="garden-atmospheric-aura" aria-hidden="true"></div>
-
-          <!-- Master Garden SVG Stage -->
+          <!-- Living Botanical SVG Canvas -->
           <svg 
             id="garden-stage-svg" 
             class="garden-stage-svg" 
             viewBox="0 0 1200 800" 
-            preserveAspectRatio="xMidYMax slice"
-            aria-label="Sapphire Rose Garden"
+            preserveAspectRatio="xMidYMid slice" 
+            xmlns="http://www.w3.org/2000/svg"
           >
-            ${getRoseGradients()}
+            <defs>
+              <!-- Rose & Petal Color Gradients -->
+              ${getRoseGradients()}
+            </defs>
 
-            <!-- Distant Horizon Mist & Navy Ground Silhouette -->
-            <g class="garden-ground-group">
-              <ellipse cx="600" cy="790" rx="750" ry="120" fill="url(#gardenHorizonMistGrad)" />
+            <!-- Celestial Hillside Horizon Ground -->
+            <g id="garden-ground-horizon">
               <path 
                 d="M -100,800 Q 250,730 600,750 T 1300,740 L 1300,850 L -100,850 Z" 
                 fill="#030712" 
@@ -99,11 +100,11 @@ export function createChapter2(app) {
 
           <!-- Emotional Epilogue Card -->
           <div id="garden-epilogue-card" class="garden-epilogue-card" style="opacity: 0;">
-            <p class="epilogue-phrase-1">${gardenConfig.epilogue1}</p>
-            <h2 class="epilogue-headline">${gardenConfig.epilogue2}</h2>
+            <p class="epilogue-phrase-1">${gardenConfig.epilogue1 || "I couldn't bring you flowers today..."}</p>
+            <h2 class="epilogue-headline">${gardenConfig.epilogue2 || "I'm going to make that happen very soon."}</h2>
             ${gardenConfig.epilogue3 ? `<p class="epilogue-phrase-3">${gardenConfig.epilogue3}</p>` : ''}
             <button id="garden-continue-btn" class="btn-glow" style="margin-top: 1.25rem;">
-              <span>${gardenConfig.continueButtonText || 'Open the letter ✉️'}</span>
+              <span>${gardenConfig.continueButtonText || 'See what comes next ✨'}</span>
             </button>
           </div>
 
@@ -118,7 +119,7 @@ export function createChapter2(app) {
   function bindPrologue() {
     const continueBtn = document.getElementById('garden-continue-btn');
 
-    // Button advances to Chapter 3 (The Letter)
+    // Button advances directly to Chapter 4 (Sand Portrait)
     if (continueBtn) {
       continueBtn.addEventListener('click', () => {
         if (continueBtn.disabled) return;
@@ -144,11 +145,15 @@ export function createChapter2(app) {
           duration: 0.45,
           ease: 'power2.in',
         });
-        tl.to('#garden-viewport', {
-          opacity: 0,
-          duration: 0.45,
-          ease: 'power2.in',
-        }, '-=0.2');
+        tl.to(
+          '#garden-viewport',
+          {
+            opacity: 0,
+            duration: 0.45,
+            ease: 'power2.in',
+          },
+          '-=0.2'
+        );
       });
     }
   }
@@ -157,7 +162,6 @@ export function createChapter2(app) {
     const track = document.getElementById('garden-scroll-track');
     const viewport = document.getElementById('garden-viewport');
     const prologue = document.getElementById('garden-prologue');
-    const aura = document.querySelector('.garden-atmospheric-aura');
     const epilogueCard = document.getElementById('garden-epilogue-card');
 
     if (!track || !viewport) return;
