@@ -41,7 +41,7 @@ export const config = {
     title: "Particle Rain",
     numbers: ['3', '2', '1'],
     phrases: ['You', 'Are', 'My', 'Love'],
-    finaleCaption: "Forever yours",
+    finaleCaption: "Happy Birthday Asalim!",
     continueButtonText: "Begin our journey ✨",
   },
 

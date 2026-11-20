@@ -112,6 +112,13 @@ async function runFinalVerificationSuite() {
     });
     assert(ch1Canvases.hasRain && ch1Canvases.hasFg, 'Dual canvases for digital rain and particle morph are active');
 
+    // Trigger finale step to verify caption text
+    const finaleCaptionConfig = await page.evaluate(() => {
+      const caption = document.getElementById('countdown-caption');
+      return window.config?.chapter1?.finaleCaption;
+    });
+    assert(finaleCaptionConfig === 'Happy Birthday Asalim!', `Finale caption configured as: "${finaleCaptionConfig}"`);
+
     // Skip/advance to Chapter 2 (Date Lock)
     console.log('  Advancing from opening countdown to Chapter 2 (Date Lock)...');
     await page.click('#btn-countdown-skip');

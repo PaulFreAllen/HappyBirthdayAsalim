@@ -299,7 +299,7 @@ export function createChapter1(app) {
     springGoal = 1;
 
     if (step.type === 'image') {
-      const finaleCaption = ch1Config.finaleCaption || 'Forever yours';
+      const finaleCaption = ch1Config.finaleCaption || 'Happy Birthday Asalim!';
       if (caption) {
         caption.textContent = finaleCaption;
         setTimeout(() => {
@@ -307,7 +307,7 @@ export function createChapter1(app) {
             caption.classList.add('on');
             revealContinueButton();
           }
-        }, 1400);
+        }, 400);
       } else {
         revealContinueButton();
       }

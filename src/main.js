@@ -20,6 +20,7 @@ import { createChapter5 } from './chapters/chapter5_countdownMessage.js';
 
 gsap.registerPlugin(ScrollTrigger);
 window.ScrollTrigger = ScrollTrigger;
+window.config = config;
 
 class SapphireBlossomApp {
   constructor() {
