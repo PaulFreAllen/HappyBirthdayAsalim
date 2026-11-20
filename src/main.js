@@ -12,13 +12,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { config } from './config.js';
 import { BackgroundParticles } from './components/backgroundParticles.js';
 import { ProgressManager } from './components/progressManager.js';
-import { createChapter1 } from './chapters/chapter1_invitation.js';
-import { createChapter2 } from './chapters/chapter2_dateLock.js';
-import { createChapter3 } from './chapters/chapter3_escapingBtn.js';
-import { createChapter4 } from './chapters/chapter4_garden.js';
-import { createChapter5 } from './chapters/chapter5_letter.js';
-import { createChapter6 } from './chapters/chapter6_videoFinale.js';
-import { createChapter7 } from './chapters/chapter7_sandPortrait.js';
+import { createChapter1 } from './chapters/chapter1_dateLock.js';
+import { createChapter2 } from './chapters/chapter2_garden.js';
+import { createChapter3 } from './chapters/chapter3_letter.js';
+import { createChapter4 } from './chapters/chapter4_sandPortrait.js';
+import { createChapter5 } from './chapters/chapter5_countdownMessage.js';
 
 gsap.registerPlugin(ScrollTrigger);
 window.ScrollTrigger = ScrollTrigger;
@@ -42,19 +40,17 @@ class SapphireBlossomApp {
       this.particles = new BackgroundParticles(canvas);
     }
 
-    // 2. Initialize Progress State Manager
-    this.progress = new ProgressManager(7, (newChapter) => {
+    // 2. Initialize Progress State Manager (5 Chapters)
+    this.progress = new ProgressManager(5, (newChapter) => {
       this.transitionToChapter(newChapter, true);
     });
 
-    // 3. Register Chapter Modules
+    // 3. Register Chapter Modules (Exactly 5 Chapters)
     this.registerChapterModule(1, createChapter1(this));
     this.registerChapterModule(2, createChapter2(this));
     this.registerChapterModule(3, createChapter3(this));
     this.registerChapterModule(4, createChapter4(this));
     this.registerChapterModule(5, createChapter5(this));
-    this.registerChapterModule(6, createChapter6(this));
-    this.registerChapterModule(7, createChapter7(this));
 
     // 4. Setup Navigation UI Listeners
     this.setupNavigation();

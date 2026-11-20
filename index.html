@@ -44,13 +44,11 @@
       </div>
 
       <nav class="chapter-stepper" aria-label="Journey Chapters">
-        <button class="step-dot active" data-chapter="1" data-title="The Invitation" aria-label="Chapter 1: The Invitation"></button>
-        <button class="step-dot" data-chapter="2" data-title="The Date Lock" aria-label="Chapter 2: The Date Lock"></button>
-        <button class="step-dot" data-chapter="3" data-title="The Escaping Button" aria-label="Chapter 3: The Escaping Button"></button>
-        <button class="step-dot" data-chapter="4" data-title="Sapphire Garden" aria-label="Chapter 4: Sapphire Garden"></button>
-        <button class="step-dot" data-chapter="5" data-title="The Letter" aria-label="Chapter 5: The Letter"></button>
-        <button class="step-dot" data-chapter="6" data-title="The Finale" aria-label="Chapter 6: The Finale"></button>
-        <button class="step-dot" data-chapter="7" data-title="Sand Portrait" aria-label="Chapter 7: Sand Portrait"></button>
+        <button class="step-dot active" data-chapter="1" data-title="Date Lock" aria-label="Chapter 1: Date Lock"></button>
+        <button class="step-dot" data-chapter="2" data-title="Blue Rose Garden" aria-label="Chapter 2: Blue Rose Garden"></button>
+        <button class="step-dot" data-chapter="3" data-title="Personal Letter" aria-label="Chapter 3: Personal Letter"></button>
+        <button class="step-dot" data-chapter="4" data-title="Sand Portrait" aria-label="Chapter 4: Sand Portrait"></button>
+        <button class="step-dot" data-chapter="5" data-title="Message" aria-label="Chapter 5: Message"></button>
       </nav>
 
       <div class="nav-actions">
@@ -80,39 +78,29 @@
     <!-- Main Experience Stage -->
     <main id="app">
       <div id="stage">
-        <!-- Chapter 1: The Invitation -->
-        <section id="chapter-1" class="chapter-stage chapter-invitation active" data-index="1">
-          <!-- Populated by chapter1_invitation.js -->
+        <!-- Chapter 1: Date Lock -->
+        <section id="chapter-1" class="chapter-stage active" data-index="1">
+          <!-- Populated by chapter1_dateLock.js -->
         </section>
 
-        <!-- Chapter 2: The Date Lock -->
+        <!-- Chapter 2: Blue Rose Garden -->
         <section id="chapter-2" class="chapter-stage inactive" data-index="2">
-          <!-- Populated by chapter2_dateLock.js -->
+          <!-- Populated by chapter2_garden.js -->
         </section>
 
-        <!-- Chapter 3: The Escaping Button -->
+        <!-- Chapter 3: Personal Letter -->
         <section id="chapter-3" class="chapter-stage inactive" data-index="3">
-          <!-- Populated by chapter3_escapingBtn.js -->
+          <!-- Populated by chapter3_letter.js -->
         </section>
 
-        <!-- Chapter 4: Sapphire Blossom (The Living Garden) -->
-        <section id="chapter-4" class="chapter-stage inactive" data-index="4">
-          <!-- Populated by chapter4_garden.js -->
+        <!-- Chapter 4: Sand Portrait Birthday Finale -->
+        <section id="chapter-4" class="chapter-stage chapter-sand-portrait inactive" data-index="4">
+          <!-- Populated by chapter4_sandPortrait.js -->
         </section>
 
-        <!-- Chapter 5: The Letter -->
+        <!-- Chapter 5: Countdown and Message Interaction -->
         <section id="chapter-5" class="chapter-stage inactive" data-index="5">
-          <!-- Populated by chapter5_letter.js -->
-        </section>
-
-        <!-- Chapter 6: The Video & Finale -->
-        <section id="chapter-6" class="chapter-stage inactive" data-index="6">
-          <!-- Populated by chapter6_videoFinale.js -->
-        </section>
-
-        <!-- Chapter 7: The Sand Portrait & Final Surprise -->
-        <section id="chapter-7" class="chapter-stage chapter-sand-portrait inactive" data-index="7">
-          <!-- Populated by chapter7_sandPortrait.js -->
+          <!-- Populated by chapter5_countdownMessage.js -->
         </section>
       </div>
     </main>
