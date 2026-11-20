@@ -45,7 +45,7 @@ async function runCompleteJourneyTest() {
     // -----------------------------------------------------------
     // TEST 1: Clean Load & Navigation Stepper Inspection
     // -----------------------------------------------------------
-    console.log('📌 Test 1: Verifying Initial State & 6-Chapter Stepper...');
+    console.log('📌 Test 1: Verifying Initial State & 7-Chapter Stepper...');
     await page.goto(FILE_URL, { waitUntil: 'load' });
     await sleep(600);
 
@@ -72,17 +72,17 @@ async function runCompleteJourneyTest() {
     console.log(`  ✓ Section IDs present: ${initData.sectionIds.join(', ')}`);
     console.log(`  ✓ No quiz elements in DOM: ${!initData.hasQuizContainer && !initData.hasQuizHearts}`);
 
-    if (initData.dotCount !== 6) {
-      throw new Error(`Expected 6 stepper dots, found ${initData.dotCount}`);
+    if (initData.dotCount !== 7) {
+      throw new Error(`Expected 7 stepper dots, found ${initData.dotCount}`);
     }
-    if (initData.totalChapters !== 6) {
-      throw new Error(`Expected ProgressManager totalChapters to be 6, found ${initData.totalChapters}`);
+    if (initData.totalChapters !== 7) {
+      throw new Error(`Expected ProgressManager totalChapters to be 7, found ${initData.totalChapters}`);
     }
     if (initData.hasQuizContainer || initData.hasQuizHearts) {
       throw new Error('Quiz elements still present in initial DOM');
     }
 
-    // Verify dot chapter sequence: 1 through 6
+    // Verify dot chapter sequence: 1 through 7
     const expectedTitles = [
       'The Invitation',
       'The Date Lock',
@@ -90,6 +90,7 @@ async function runCompleteJourneyTest() {
       'Sapphire Garden',
       'The Letter',
       'The Finale',
+      'Sand Portrait',
     ];
     initData.dots.forEach((dot, idx) => {
       if (parseInt(dot.chapter, 10) !== idx + 1) {
@@ -278,6 +279,28 @@ async function runCompleteJourneyTest() {
     const inCh4ViaStepper = await page.$eval('#chapter-4', (el) => el.classList.contains('active'));
     console.log(`  ✓ Successfully jumped back to Chapter 4 (Garden) via Stepper Dot: ${inCh4ViaStepper}`);
     if (!inCh4ViaStepper) throw new Error('Failed to jump to Chapter 4 via stepper');
+
+    // -----------------------------------------------------------
+    // TEST 10: Chapter 7 Sand Portrait Integration
+    // -----------------------------------------------------------
+    console.log('\n📌 Test 10: Advancing to Chapter 7 (Sand Portrait)...');
+    await page.click('.step-dot[data-chapter="6"]');
+    await sleep(1500);
+    await page.click('#btn-reveal-finale');
+    await sleep(1000);
+    await page.click('#btn-to-sand-portrait');
+    await sleep(1500);
+    await page.waitForSelector('#chapter-7.active', { timeout: 4000 });
+
+    const inCh7 = await page.$eval('#chapter-7', (el) => el.classList.contains('active'));
+    const sandCanvasExists = await page.evaluate(() => {
+      const c = document.getElementById('sand-canvas');
+      return c && c.width > 0 && c.height > 0;
+    });
+    console.log(`  ✓ Successfully reached Chapter 7 (Sand Portrait): ${inCh7}`);
+    console.log(`  ✓ Sand simulation canvas initialized and rendering: ${sandCanvasExists}`);
+    if (!inCh7) throw new Error('Failed to transition to Chapter 7');
+    if (!sandCanvasExists) throw new Error('Sand canvas not initialized in Chapter 7');
 
     console.log('\n🎉 ALL VERIFICATION CHECKS PASSED PERFECTLY!');
   } finally {

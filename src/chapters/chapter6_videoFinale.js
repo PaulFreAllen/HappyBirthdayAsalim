@@ -116,7 +116,15 @@ export function createChapter6(app) {
 
           <!-- Post-Finale Interactive Journey Controls -->
           <div class="finale-controls">
-            <button id="btn-replay-journey" class="btn-glow">
+            <button id="btn-to-sand-portrait" class="btn-glow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span>${finaleConfig.continueToSandText || 'One Last Surprise ✨'}</span>
+            </button>
+
+            <button id="btn-replay-journey" class="btn-glass">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                 <path d="M3 3v5h5"/>
@@ -151,6 +159,7 @@ export function createChapter6(app) {
 
   function bindEvents() {
     const btnRevealFinale = document.getElementById('btn-reveal-finale');
+    const btnToSandPortrait = document.getElementById('btn-to-sand-portrait');
     const btnReplayJourney = document.getElementById('btn-replay-journey');
     const btnReadLetter = document.getElementById('btn-read-letter');
     const btnBackToVideo = document.getElementById('btn-back-to-video');
@@ -158,6 +167,12 @@ export function createChapter6(app) {
     if (btnRevealFinale) {
       btnRevealFinale.addEventListener('click', () => {
         revealGrandFinale();
+      });
+    }
+
+    if (btnToSandPortrait) {
+      btnToSandPortrait.addEventListener('click', () => {
+        app.progress.nextChapter();
       });
     }
 

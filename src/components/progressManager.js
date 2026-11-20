@@ -64,10 +64,12 @@ export class ProgressManager {
   }
 
   unlockChapter(chapterNumber) {
-    if (!this.state.unlockedChapters.includes(chapterNumber)) {
-      this.state.unlockedChapters.push(chapterNumber);
-      this.state.unlockedChapters.sort((a, b) => a - b);
+    for (let i = 1; i <= chapterNumber; i++) {
+      if (!this.state.unlockedChapters.includes(i)) {
+        this.state.unlockedChapters.push(i);
+      }
     }
+    this.state.unlockedChapters.sort((a, b) => a - b);
     this.saveState();
   }
 

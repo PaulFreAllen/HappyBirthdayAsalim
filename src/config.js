@@ -9,6 +9,8 @@
  * ===================================================================
  */
 
+import { DEFAULT_SAND_CAPTION, DEFAULT_SAND_PHOTO } from './assets/sandPortraitData.js';
+
 export const config = {
   // -----------------------------------------------------------------
   // 1. GENERAL METADATA & PARTNER NICKNAME
@@ -144,10 +146,22 @@ export const config = {
     closingMessage: "Forever celebrating you. 💙✨",
     replayButtonText: "Relive Our Journey ✨",
     readLetterButtonText: "Read the Letter Again ✉️",
+    continueToSandText: "One Last Surprise ✨",
   },
 
-  // Backward compatibility getters
-  get chapter7() {
-    return this.chapter6;
+  // -----------------------------------------------------------------
+  // 9. CHAPTER 7: THE SAND PORTRAIT & FINAL SURPRISE
+  // -----------------------------------------------------------------
+  chapter7: {
+    badge: "Chapter VII",
+    title: "One Last Surprise",
+    subtitle: "Carved in stardust and memory...",
+    quote: "Like sand through time, every grain holds a piece of our story.",
+    caption: DEFAULT_SAND_CAPTION,
+    photoSrc: DEFAULT_SAND_PHOTO,
+    duration: 16,
+    reducedMotionDuration: 4,
+    replayButtonText: "Scatter & Re-form ✨",
+    restartJourneyText: "Relive Our Whole Journey 💫",
   },
 };
