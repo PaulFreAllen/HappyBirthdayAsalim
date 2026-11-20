@@ -1,0 +1,289 @@
+/* ===================================================================
+   SAPPHIRE BLOSSOM — REUSABLE COMPONENTS & MICRO-INTERACTIONS
+   =================================================================== */
+
+/* Luxury Glowing Button */
+.btn-glow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.95rem 2.3rem;
+  min-height: 48px;
+  min-width: 130px;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(15, 43, 107, 0.98) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 
+    0 10px 25px -5px rgba(37, 99, 235, 0.45),
+    0 0 16px 0 rgba(0, 240, 255, 0.22),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+  transition: transform 0.24s var(--ease-spring), box-shadow 0.24s ease, border-color 0.24s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  text-decoration: none;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.28),
+    transparent
+  );
+  transition: left 0.65s ease;
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px) scale(1.025);
+  border-color: rgba(0, 240, 255, 0.8);
+  box-shadow: 
+    0 16px 36px -4px rgba(37, 99, 235, 0.65),
+    0 0 25px 2px rgba(0, 240, 255, 0.42),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.6);
+}
+
+.btn-glow:hover::before {
+  left: 100%;
+}
+
+.btn-glow:active {
+  transform: translateY(1px) scale(0.975);
+  box-shadow: 
+    0 6px 18px -4px rgba(37, 99, 235, 0.4),
+    0 0 12px 0 rgba(0, 240, 255, 0.25);
+}
+
+/* Secondary Glass Button */
+.btn-glass,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.8rem;
+  min-height: 48px;
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  background: rgba(14, 26, 58, 0.5);
+  border: 1px solid var(--glass-border);
+  border-radius: 9999px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: transform 0.22s var(--ease-smooth), color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  touch-action: manipulation;
+  text-decoration: none;
+}
+
+.btn-glass:hover,
+.btn-secondary:hover {
+  color: var(--text-primary);
+  background: rgba(22, 42, 92, 0.75);
+  border-color: var(--glass-border-focus);
+  transform: translateY(-1.5px);
+}
+
+.btn-glass:active,
+.btn-secondary:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Glassmorphism Card Container */
+.glass-card {
+  position: relative;
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 28px;
+  padding: clamp(2rem, 5vw, 3.2rem);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.glass-card:hover {
+  border-color: rgba(56, 189, 248, 0.32);
+}
+
+/* Category Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(37, 99, 235, 0.18);
+  color: var(--cyan-subtle);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+/* Romantic Serif Italic Quote */
+.quote-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Global Progress Header Bar */
+.experience-nav {
+  position: fixed;
+  top: 1.25rem;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  z-index: var(--z-overlay);
+  pointer-events: none;
+}
+
+.experience-nav > * {
+  pointer-events: auto;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  opacity: 0.85;
+  transition: opacity var(--transition-fast);
+}
+
+.nav-brand:hover {
+  opacity: 1;
+}
+
+.nav-brand .gem-icon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan-glow);
+  box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+/* Chapter step progress dots */
+.chapter-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: rgba(4, 7, 17, 0.8);
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  backdrop-filter: blur(14px);
+}
+
+.step-dot {
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.3);
+  border: none;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  position: relative;
+  touch-action: manipulation;
+}
+
+.step-dot.active {
+  background: var(--cyan-glow);
+  box-shadow: 0 0 10px var(--cyan-glow), 0 0 20px rgba(0, 240, 255, 0.5);
+  transform: scale(1.35);
+}
+
+.step-dot.completed {
+  background: var(--sapphire-400);
+}
+
+.step-dot:hover::after {
+  content: attr(data-title);
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark-secondary);
+  border: 1px solid var(--glass-border);
+  padding: 0.3rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 200;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* Sound and restart utilities */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(10, 19, 44, 0.65);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(10px);
+  touch-action: manipulation;
+}
+
+.icon-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--cyan-subtle);
+  background: rgba(22, 42, 92, 0.85);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
+  transform: scale(1.05);
+}
+
+@media (max-width: 640px) {
+  .experience-nav {
+    padding: 0 1rem;
+    top: 0.75rem;
+  }
+  .nav-brand {
+    font-size: 0.95rem;
+  }
+  .chapter-stepper {
+    gap: 0.4rem;
+    padding: 0.35rem 0.65rem;
+  }
+}

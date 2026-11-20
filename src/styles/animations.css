@@ -1,0 +1,133 @@
+/* ===================================================================
+   SAPPHIRE BLOSSOM — KEYFRAMES & MICRO-ANIMATIONS
+   =================================================================== */
+
+/* Ambient Float */
+@keyframes ambientFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+.animate-float {
+  animation: ambientFloat 6s ease-in-out infinite;
+}
+
+/* Subtle Breathing Glow */
+@keyframes sapphirePulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.35));
+    opacity: 0.9;
+  }
+  50% {
+    filter: drop-shadow(0 0 24px rgba(37, 99, 235, 0.65));
+    opacity: 1;
+  }
+}
+
+.pulse-sapphire {
+  animation: sapphirePulse 4s ease-in-out infinite;
+}
+
+/* Gentle Starlight Twinkle */
+@keyframes starlightTwinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* Shimmer Light Sweep */
+@keyframes shimmerSweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--text-primary) 0%,
+    var(--cyan-glow) 50%,
+    var(--text-primary) 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmerSweep 6s linear infinite;
+}
+
+/* Playful Shake for Incorrect Password/Date */
+@keyframes subtleShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-7px); }
+  40%, 80% { transform: translateX(7px); }
+}
+
+.animate-shake {
+  animation: subtleShake 0.4s var(--ease-spring);
+}
+
+/* Floating Hearts Explosion */
+@keyframes heartFloatUp {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.6) rotate(0deg);
+  }
+  50% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx, 0px), var(--ty, -140px)) scale(1.35) rotate(var(--rot, 15deg));
+  }
+}
+
+.floating-heart {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.6rem;
+  color: var(--cyan-glow);
+  filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.65));
+  animation: heartFloatUp 1.8s var(--ease-smooth) forwards;
+  z-index: 100;
+}
+
+/* Smooth Fade In Up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.7s var(--ease-smooth) forwards;
+}
+
+/* Stagger entrance utility classes */
+.stagger-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s var(--ease-smooth), transform 0.6s var(--ease-smooth);
+}
+
+.stagger-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}

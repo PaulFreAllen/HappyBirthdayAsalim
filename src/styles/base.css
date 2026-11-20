@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-dark-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background canvas for starry particles */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: var(--z-particles);
+}
+
+/* Ambient gradient background glow with smooth transition */
+.ambient-lighting {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: var(--z-ambient-glow);
+  background: 
+    radial-gradient(circle at 50% 25%, var(--ambient-color-1) 0%, transparent 60%),
+    radial-gradient(circle at 82% 78%, var(--ambient-color-2) 0%, transparent 52%),
+    radial-gradient(circle at 18% 85%, var(--ambient-color-3) 0%, transparent 48%);
+  transition: background 1.4s ease;
+}
+
+/* Ambient Slow Light Orbs */
+.ambient-lighting::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  width: 50vw;
+  height: 50vh;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--ambient-color-1) 0%, transparent 70%);
+  filter: blur(60px);
+  opacity: 0.6;
+  animation: ambientLightDrift 28s ease-in-out infinite alternate;
+}
+
+@keyframes ambientLightDrift {
+  0% { transform: translate(-10%, -10%) scale(0.9); }
+  50% { transform: translate(15%, 8%) scale(1.1); }
+  100% { transform: translate(-5%, 15%) scale(1.0); }
+}
+
+/* Soft Cinematic Vignette Overlay */
+.vignette-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: var(--z-vignette);
+  background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(2, 4, 10, 0.68) 100%);
+}
+
+/* App container */
+#app {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Headings */
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+h1 {
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  line-height: 1.35;
+}
+
+p {
+  color: var(--text-secondary);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  max-width: 620px;
+}
+
+/* Custom Scrollbar for non-pinned scrolling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sapphire-800);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sapphire-600);
+}
+
+/* Accessible focus ring */
+:focus-visible {
+  outline: 2px solid var(--cyan-glow);
+  outline-offset: 4px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ambient-lighting::before {
+    animation: none !important;
+  }
+}
