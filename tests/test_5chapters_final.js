@@ -134,17 +134,31 @@ async function runFinalVerificationSuite() {
     // -----------------------------------------------------------
     // TEST 3: Chapter 2 — Date Lock ("The day everything started")
     // -----------------------------------------------------------
-    console.log('\n📌 Test 3: Verifying Chapter 2 (Date Lock)...');
+    console.log('\n📌 Test 3: Verifying Chapter 2 (Date Lock & Pass / Reminder Feature)...');
     const ch2Title = await page.$eval('#chapter-2 .lock-opening-title', (el) => el.textContent.trim());
     assert(ch2Title === 'The day everything started', `Opening title matches: "${ch2Title}"`);
 
-    // Enter correct date: 18 / 07 / 2022
-    await page.type('#lock-day', '18');
-    await page.type('#lock-month', '07');
-    await page.type('#lock-year', '2022');
-    await page.click('#lock-submit-btn');
+    // Verify bypass/pass button exists for when she cannot find or remember the date
+    const passBtnText = await page.$eval('#lock-pass-btn', (el) => el.textContent.trim());
+    assert(passBtnText.includes("Can't remember"), `Pass button is present with romantic reminder: "${passBtnText}"`);
 
-    console.log('  Submitted date 18/07/2022, waiting for transition to Chapter 3 (Blue Rose Garden)...');
+    // Click the pass/reminder button to verify it auto-fills 18/07/2022 and unlocks
+    console.log('  Testing date-lock bypass / reminder button...');
+    await page.click('#lock-pass-btn');
+
+    const filledValues = await page.evaluate(() => {
+      return {
+        d: document.getElementById('lock-day').value,
+        m: document.getElementById('lock-month').value,
+        y: document.getElementById('lock-year').value,
+      };
+    });
+    assert(
+      filledValues.d === '18' && filledValues.m === '07' && filledValues.y === '2022',
+      `Auto-filled anniversary date: ${filledValues.d}/${filledValues.m}/${filledValues.y}`
+    );
+
+    console.log('  Waiting for vault unlock and transition to Chapter 3 (Blue Rose Garden)...');
     await page.waitForSelector('#chapter-3.active', { timeout: 6000 });
     await sleep(600);
 
@@ -152,7 +166,7 @@ async function runFinalVerificationSuite() {
       const ch3 = document.getElementById('chapter-3');
       return ch3 && ch3.classList.contains('active');
     });
-    assert(ch3Active, 'Successfully transitioned to Chapter 3 (Blue Rose Garden)');
+    assert(ch3Active, 'Successfully transitioned to Chapter 3 (Blue Rose Garden) via date pass/unlock');
 
     // -----------------------------------------------------------
     // TEST 4: Chapter 3 — Blue Rose Garden

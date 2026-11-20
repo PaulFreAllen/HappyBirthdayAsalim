@@ -58,8 +58,9 @@ export const config = {
       month: "07",
       day: "18",
     },
-    hintAfterFailedAttempts: 3,
+    hintAfterFailedAttempts: 2,
     hintText: "💡 Hint: That unforgettable July day in 2022 when we officially became 'us'... ✨",
+    passLinkText: "Can't remember the date? Let me remind you 💭",
     errorMessages: [
       "Hmm, close... but not quite! Think back 💭",
       "Nice guess, but that's not our magic day! 😉",

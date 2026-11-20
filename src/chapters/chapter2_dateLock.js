@@ -97,6 +97,9 @@ export function getDateLockHTML() {
           <button id="lock-submit-btn" class="btn-glow" type="button">
             <span>Unlock Memories ✨</span>
           </button>
+          <button id="lock-pass-btn" class="lock-pass-btn" type="button" aria-label="Can't remember the date? Let me remind you">
+            <span>${lockConfig.passLinkText || "Can't remember the date? Let me remind you 💭"}</span>
+          </button>
         </div>
 
         <!-- Dynamic Feedback Status Message -->
@@ -122,6 +125,7 @@ export function bindDateLockEvents(container, app) {
   const inputMonth = container.querySelector('#lock-month');
   const inputYear = container.querySelector('#lock-year');
   const submitBtn = container.querySelector('#lock-submit-btn');
+  const passBtn = container.querySelector('#lock-pass-btn');
   const feedbackMsg = container.querySelector('#lock-feedback-msg');
   const hintBox = container.querySelector('#lock-hint-box');
   const hintText = container.querySelector('#lock-hint-text');
@@ -159,10 +163,16 @@ export function bindDateLockEvents(container, app) {
 
   submitBtn?.addEventListener('click', attemptUnlock);
 
-  skipBtn?.addEventListener('click', () => {
+  const passDateLock = () => {
+    if (isUnlocked) return;
+
     inputDay.value = targetDate.day;
     inputMonth.value = targetDate.month;
     inputYear.value = targetDate.year;
+
+    [inputDay, inputMonth, inputYear].forEach((inp) => {
+      inp.classList.add('input-success');
+    });
 
     showFeedback(
       lockConfig.skipRevealMessage || "July 18, 2022 — the day our beautiful relationship began. Always right here in my heart. ✨",
@@ -172,7 +182,10 @@ export function bindDateLockEvents(container, app) {
     setTimeout(() => {
       unlockVault();
     }, 1200);
-  });
+  };
+
+  passBtn?.addEventListener('click', passDateLock);
+  skipBtn?.addEventListener('click', passDateLock);
 
   function attemptUnlock() {
     if (isUnlocked) return;
@@ -231,6 +244,8 @@ export function bindDateLockEvents(container, app) {
       inp.classList.add('input-success');
     });
     if (submitBtn) submitBtn.disabled = true;
+    if (passBtn) passBtn.disabled = true;
+    if (skipBtn) skipBtn.disabled = true;
 
     showFeedback(
       lockConfig.successMessage || 'You remembered. The lock clicks open... ✨',
