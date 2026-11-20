@@ -47,8 +47,8 @@ async function runPreviewTest() {
   });
 
   try {
-    console.log(`📌 Navigating to http://localhost:${PORT}/ ...`);
-    const resp = await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'load', timeout: 15000 });
+    console.log(`📌 Navigating to http://localhost:${PORT}/sapphire-blossom/ ...`);
+    const resp = await page.goto(`http://localhost:${PORT}/sapphire-blossom/`, { waitUntil: 'load', timeout: 15000 });
     console.log(`  HTTP Response Status: ${resp.status()}`);
 
     const title = await page.title();

@@ -1,8 +1,10 @@
+import { spawn } from 'child_process';
 import puppeteer from 'puppeteer-core';
 import path from 'path';
 
 const CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const FILE_URL = `file://${path.resolve('dist/index.html')}`;
+const PORT = 4173;
+const APP_URL = `http://localhost:${PORT}/sapphire-blossom/`;
 
 async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -10,6 +12,11 @@ async function sleep(ms) {
 
 async function runFinalVerificationSuite() {
   console.log('🚀 Starting Verification Suite for Final 4-Chapter Architecture...\n');
+
+  const preview = spawn('npx', ['vite', 'preview', '--port', String(PORT)], {
+    stdio: 'ignore',
+  });
+  await sleep(1500);
 
   const consoleErrors = [];
 
@@ -59,7 +66,7 @@ async function runFinalVerificationSuite() {
     // TEST 1: Exactly 4 Chapters in Stepper & DOM
     // -----------------------------------------------------------
     console.log('📌 Test 1: Verifying exactly 4 chapters in Stepper and DOM (Sand Animation is the finale)...');
-    await page.goto(FILE_URL, { waitUntil: 'load' });
+    await page.goto(APP_URL, { waitUntil: 'load' });
     await sleep(600);
 
     await page.evaluate(() => {
@@ -305,6 +312,7 @@ async function runFinalVerificationSuite() {
     process.exit(1);
   } finally {
     await browser.close();
+    preview.kill();
   }
 }
 
