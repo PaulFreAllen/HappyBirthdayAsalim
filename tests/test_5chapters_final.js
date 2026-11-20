@@ -210,9 +210,12 @@ async function runFinalVerificationSuite() {
     assert(ch4Active, 'Successfully transitioned directly to Chapter 4 (Sand Portrait)');
 
     // -----------------------------------------------------------
-    // TEST 5: Chapter 4 — Sand Portrait (No upload controls, locked to photo)
+    // TEST 5: Chapter 4 — Sand Portrait (No upload controls, locked to photo, 8s speed, desktop coverage)
     // -----------------------------------------------------------
-    console.log('\n📌 Test 5: Verifying Chapter 4 (Sand Portrait without upload UI)...');
+    console.log('\n📌 Test 5: Verifying Chapter 4 (Sand Portrait, 8s duration & Desktop Coverage)...');
+    const ch4Duration = await page.evaluate(() => window.config?.chapter4?.duration);
+    assert(ch4Duration === 8, `Sand animation duration configured to 8 seconds: ${ch4Duration}s`);
+
     const uploadControlsExist = await page.evaluate(() => {
       const fileInput = !!document.getElementById('sand-file-input');
       const dropOverlay = !!document.getElementById('sand-drop-overlay');
@@ -221,11 +224,20 @@ async function runFinalVerificationSuite() {
     });
     assert(!uploadControlsExist, 'Picture-selection/upload interface is completely removed');
 
-    const canvasExists = await page.evaluate(() => {
+    const canvasCoverStats = await page.evaluate(() => {
       const c = document.getElementById('sand-canvas');
-      return c && c.width > 0 && c.height > 0;
+      return {
+        exists: !!c,
+        w: c ? c.width : 0,
+        h: c ? c.height : 0,
+        vw: window.innerWidth,
+        vh: window.innerHeight,
+      };
     });
-    assert(canvasExists, 'Sand particle canvas is active and rendering predefined portrait');
+    assert(
+      canvasCoverStats.exists && canvasCoverStats.w >= canvasCoverStats.vw,
+      `Sand canvas covers full desktop display: ${canvasCoverStats.w}x${canvasCoverStats.h} (viewport: ${canvasCoverStats.vw}x${canvasCoverStats.vh})`
+    );
 
     // Verify birthday message is NOT shown initially
     const msgHiddenBeforeComplete = await page.evaluate(() => {
