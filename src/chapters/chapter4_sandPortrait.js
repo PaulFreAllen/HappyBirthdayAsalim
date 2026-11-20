@@ -92,8 +92,15 @@ export function createChapter4(app) {
             <div class="sand-birthday-sparkle">✨</div>
             <h2 class="sand-birthday-text">${birthdayMsg}</h2>
             <div class="sand-birthday-actions">
-              <button id="sand-btn-to-countdown" class="btn-glow">
-                <span>${continueBtnText}</span>
+              <button id="sand-btn-restart-banner" class="btn-glow">
+                <span>Scatter & Re-form ✨</span>
+              </button>
+              <button id="sand-btn-relive-journey" class="btn-glass">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                  <path d="M3 3v5h5"/>
+                </svg>
+                <span>Relive Our Journey 💫</span>
               </button>
             </div>
           </div>
@@ -575,11 +582,23 @@ export function createChapter4(app) {
       });
     }
 
-    // Continue to Chapter 5 (Countdown & Message)
-    const btnToCountdown = document.getElementById('sand-btn-to-countdown');
-    if (btnToCountdown) {
-      btnToCountdown.addEventListener('click', () => {
-        app.progress.nextChapter();
+    // Birthday Finale Actions
+    const btnRestartBanner = document.getElementById('sand-btn-restart-banner');
+    if (btnRestartBanner) {
+      btnRestartBanner.addEventListener('click', () => {
+        restart();
+        if (app.particles) {
+          app.particles.burst(window.innerWidth / 2, window.innerHeight / 2, 40, { palette: 'gold', speed: 1.2 });
+        }
+      });
+    }
+
+    const btnRelive = document.getElementById('sand-btn-relive-journey');
+    if (btnRelive) {
+      btnRelive.addEventListener('click', () => {
+        if (confirm('Revisit our journey from the very beginning?')) {
+          app.progress.resetProgress();
+        }
       });
     }
 

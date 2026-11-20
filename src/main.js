@@ -16,7 +16,6 @@ import { createChapter1 } from './chapters/chapter1_openingCountdown.js';
 import { createChapter2 } from './chapters/chapter2_dateLock.js';
 import { createChapter3 } from './chapters/chapter3_garden.js';
 import { createChapter4 } from './chapters/chapter4_sandPortrait.js';
-import { createChapter5 } from './chapters/chapter5_countdownMessage.js';
 
 gsap.registerPlugin(ScrollTrigger);
 window.ScrollTrigger = ScrollTrigger;
@@ -41,17 +40,16 @@ class SapphireBlossomApp {
       this.particles = new BackgroundParticles(canvas);
     }
 
-    // 2. Initialize Progress State Manager (5 Chapters)
-    this.progress = new ProgressManager(5, (newChapter) => {
+    // 2. Initialize Progress State Manager (Exactly 4 Chapters, ending at Sand Portrait Finale)
+    this.progress = new ProgressManager(4, (newChapter) => {
       this.transitionToChapter(newChapter, true);
     });
 
-    // 3. Register Chapter Modules (Exactly 5 Chapters)
+    // 3. Register Chapter Modules (Exactly 4 Chapters: Countdown -> Date Lock -> Garden -> Sand Portrait Finale)
     this.registerChapterModule(1, createChapter1(this));
     this.registerChapterModule(2, createChapter2(this));
     this.registerChapterModule(3, createChapter3(this));
     this.registerChapterModule(4, createChapter4(this));
-    this.registerChapterModule(5, createChapter5(this));
 
     // 4. Setup Navigation UI Listeners
     this.setupNavigation();

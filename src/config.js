@@ -89,30 +89,18 @@ export const config = {
   },
 
   // -----------------------------------------------------------------
-  // CHAPTER 4: SAND PORTRAIT FINALE
+  // CHAPTER 4: SAND PORTRAIT BIRTHDAY FINALE (FINAL SCENE)
   // -----------------------------------------------------------------
   chapter4: {
-    badge: "Chapter III",
+    badge: "Finale",
     title: "Sand Portrait",
     subtitle: "Carved in stardust and memory...",
     birthdayMessage: "Happy Birthday, Asalim!",
-    continueButtonText: "Continue to Countdown ✨",
     caption: DEFAULT_SAND_CAPTION,
     photoSrc: DEFAULT_SAND_PHOTO,
     duration: 16,
     reducedMotionDuration: 4,
     replayButtonText: "Scatter & Re-form ✨",
-  },
-
-  // -----------------------------------------------------------------
-  // CHAPTER 5: COUNTDOWN AND MESSAGE INTERACTION
-  // -----------------------------------------------------------------
-  chapter5: {
-    badge: "Chapter IV",
-    countdownStart: 5,
-    placeholder: "Write your message here...",
-    submitButtonText: "Save Message ✨",
-    successNotice: "Your message has been saved with love ✨",
-    restartJourneyText: "Relive Our Journey 💫",
+    reliveButtonText: "Relive Our Journey 💫",
   },
 };

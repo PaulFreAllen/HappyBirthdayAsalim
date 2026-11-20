@@ -9,7 +9,7 @@ async function sleep(ms) {
 }
 
 async function runFinalVerificationSuite() {
-  console.log('🚀 Starting Verification Suite for Final 5-Chapter Architecture...\n');
+  console.log('🚀 Starting Verification Suite for Final 4-Chapter Architecture...\n');
 
   const consoleErrors = [];
 
@@ -56,9 +56,9 @@ async function runFinalVerificationSuite() {
 
   try {
     // -----------------------------------------------------------
-    // TEST 1: Exactly 5 Chapters in Stepper & DOM
+    // TEST 1: Exactly 4 Chapters in Stepper & DOM
     // -----------------------------------------------------------
-    console.log('📌 Test 1: Verifying exactly 5 chapters in Stepper and DOM...');
+    console.log('📌 Test 1: Verifying exactly 4 chapters in Stepper and DOM (Sand Animation is the finale)...');
     await page.goto(FILE_URL, { waitUntil: 'load' });
     await sleep(600);
 
@@ -74,6 +74,7 @@ async function runFinalVerificationSuite() {
       const hasQuiz = !!document.querySelector('.quiz-container');
       const hasVideo = !!document.querySelector('.birthday-video');
       const hasLetter = !!document.querySelector('.letter-parchment');
+      const hasCh5 = !!document.getElementById('chapter-5');
 
       return {
         dotCount: dots.length,
@@ -83,19 +84,20 @@ async function runFinalVerificationSuite() {
         hasQuiz,
         hasVideo,
         hasLetter,
+        hasCh5,
       };
     });
 
-    assert(structure.dotCount === 5, `Expected 5 stepper dots, found ${structure.dotCount}`);
-    assert(structure.sectionCount === 5, `Expected 5 chapter sections, found ${structure.sectionCount}`);
+    assert(structure.dotCount === 4, `Expected exactly 4 stepper dots, found ${structure.dotCount}`);
+    assert(structure.sectionCount === 4, `Expected exactly 4 chapter sections, found ${structure.sectionCount}`);
 
-    const expectedTitles = ['Countdown', 'Date Lock', 'Blue Rose Garden', 'Sand Portrait', 'Message'];
+    const expectedTitles = ['Countdown', 'Date Lock', 'Blue Rose Garden', 'Sand Portrait'];
     const titlesMatch = JSON.stringify(structure.dotTitles) === JSON.stringify(expectedTitles);
     assert(titlesMatch, `Stepper dot titles: ${JSON.stringify(structure.dotTitles)}`);
 
     assert(
-      !structure.hasQuiz && !structure.hasVideo && !structure.hasLetter,
-      'Zero quiz, video, or letter elements present in DOM'
+      !structure.hasQuiz && !structure.hasVideo && !structure.hasLetter && !structure.hasCh5,
+      'Zero quiz, video, letter, or chapter-5 elements present in DOM'
     );
 
     // -----------------------------------------------------------
@@ -114,7 +116,6 @@ async function runFinalVerificationSuite() {
 
     // Trigger finale step to verify caption text
     const finaleCaptionConfig = await page.evaluate(() => {
-      const caption = document.getElementById('countdown-caption');
       return window.config?.chapter1?.finaleCaption;
     });
     assert(finaleCaptionConfig === 'Happy Birthday Asalim!', `Finale caption configured as: "${finaleCaptionConfig}"`);
@@ -138,7 +139,7 @@ async function runFinalVerificationSuite() {
     const ch2Title = await page.$eval('#chapter-2 .lock-opening-title', (el) => el.textContent.trim());
     assert(ch2Title === 'The day everything started', `Opening title matches: "${ch2Title}"`);
 
-    // Verify bypass/pass button exists for when she cannot find or remember the date
+    // Verify bypass/pass button exists
     const passBtnText = await page.$eval('#lock-pass-btn', (el) => el.textContent.trim());
     assert(passBtnText.includes("Can't remember"), `Pass button is present with romantic reminder: "${passBtnText}"`);
 
@@ -197,8 +198,8 @@ async function runFinalVerificationSuite() {
     assert(gardenMsg1 === "I couldn't bring you flowers today...", `Garden phrase 1 matches: "${gardenMsg1}"`);
     assert(gardenMsg2 === "I'm going to make that happen very soon.", `Garden phrase 2 matches: "${gardenMsg2}"`);
 
-    // Click continue button -> should transition directly to Chapter 4 (Sand Portrait)
-    console.log('  Clicking continue to Chapter 4 (Sand Portrait Finale, skipping letter)...');
+    // Click continue button -> should transition directly to Chapter 4 (Sand Portrait Finale)
+    console.log('  Clicking continue to Chapter 4 (Sand Portrait Finale)...');
     await page.click('#garden-continue-btn');
     await page.waitForSelector('#chapter-4.active', { timeout: 8000 });
     await sleep(800);
@@ -207,12 +208,12 @@ async function runFinalVerificationSuite() {
       const ch4 = document.getElementById('chapter-4');
       return ch4 && ch4.classList.contains('active');
     });
-    assert(ch4Active, 'Successfully transitioned directly to Chapter 4 (Sand Portrait)');
+    assert(ch4Active, 'Successfully transitioned to Chapter 4 (Sand Portrait Finale)');
 
     // -----------------------------------------------------------
-    // TEST 5: Chapter 4 — Sand Portrait (Full-Screen Composition, No 9:16 Frame)
+    // TEST 5: Chapter 4 — Sand Portrait Finale (Full-Screen & Banner Actions)
     // -----------------------------------------------------------
-    console.log('\n📌 Test 5: Verifying Chapter 4 (Sand Portrait Full-Screen Composition)...');
+    console.log('\n📌 Test 5: Verifying Chapter 4 (Sand Portrait Finale & Full-Screen Composition)...');
     const uploadControlsExist = await page.evaluate(() => {
       const fileInput = !!document.getElementById('sand-file-input');
       const dropOverlay = !!document.getElementById('sand-drop-overlay');
@@ -223,7 +224,6 @@ async function runFinalVerificationSuite() {
 
     const fullScreenCheck = await page.evaluate(() => {
       const c = document.getElementById('sand-canvas');
-      const wrapper = document.querySelector('.sand-chapter-wrapper');
       return {
         hasCanvas: !!c && c.width > 0 && c.height > 0,
         isCanvasFixed: c && window.getComputedStyle(c).position === 'fixed',
@@ -262,85 +262,34 @@ async function runFinalVerificationSuite() {
     assert(isBannerVisible, 'Birthday banner is visible after portrait completion');
     assert(birthdayText === 'Happy Birthday, Asalim!', `Revealed birthday message matches: "${birthdayText}"`);
 
-    // Click continue to Chapter 5 (Countdown & Message)
-    console.log('  Clicking continue to Chapter 5 (Final Countdown & Message)...');
-    await page.click('#sand-btn-to-countdown');
-    await page.waitForSelector('#chapter-5.active', { timeout: 5000 });
-    await sleep(800);
-
-    const ch5Active = await page.evaluate(() => {
-      const ch5 = document.getElementById('chapter-5');
-      return ch5 && ch5.classList.contains('active');
+    // Verify Finale actions (Restart & Relive Our Journey)
+    const bannerActions = await page.evaluate(() => {
+      const restartBtn = document.getElementById('sand-btn-restart-banner');
+      const reliveBtn = document.getElementById('sand-btn-relive-journey');
+      const oldContinueBtn = document.getElementById('sand-btn-to-countdown');
+      return {
+        hasRestart: !!restartBtn,
+        hasRelive: !!reliveBtn,
+        hasOldContinue: !!oldContinueBtn,
+      };
     });
-    assert(ch5Active, 'Successfully transitioned to Chapter 5 (Countdown & Message)');
+
+    assert(bannerActions.hasRestart, 'Finale "Scatter & Re-form" button is present');
+    assert(bannerActions.hasRelive, 'Finale "Relive Our Journey" button is present');
+    assert(!bannerActions.hasOldContinue, 'No continue-to-countdown button exists');
 
     // -----------------------------------------------------------
-    // TEST 6: Chapter 5 — Countdown and Message Interaction
+    // TEST 6: Mobile Responsiveness & Zero Console Errors
     // -----------------------------------------------------------
-    console.log('\n📌 Test 6: Verifying Chapter 5 (Countdown & Message-Writing Interaction)...');
-
-    // Check countdown display exists
-    const countdownNumber = await page.$eval('#countdown-display', (el) => el.textContent.trim());
-    console.log(`  Initial countdown number displayed: ${countdownNumber}`);
-    assert(['5', '4', '3', '2', '1'].includes(countdownNumber), `Countdown started with number: ${countdownNumber}`);
-
-    // Wait for countdown sequence (5 -> 4 -> 3 -> 2 -> 1) to complete and message stage to reveal
-    console.log('  Waiting for countdown (5 -> 4 -> 3 -> 2 -> 1) to complete...');
-    await sleep(4800);
-
-    const messageStageVisible = await page.evaluate(() => {
-      const stage = document.getElementById('message-stage');
-      return stage && window.getComputedStyle(stage).display !== 'none';
-    });
-    assert(messageStageVisible, 'Message-writing stage revealed after countdown completed');
-
-    // Verify message writing interaction components
-    const textareaExists = await page.evaluate(() => !!document.getElementById('user-written-message'));
-    const saveBtnExists = await page.evaluate(() => !!document.getElementById('btn-submit-message'));
-    const reliveBtnExists = await page.evaluate(() => !!document.getElementById('btn-relive-journey'));
-
-    assert(textareaExists, 'Message textarea is present');
-    assert(saveBtnExists, 'Save Message button is present');
-    assert(reliveBtnExists, 'Relive Our Journey button is present');
-
-    // Test writing and saving a message
-    console.log('  Testing writing and saving a message...');
-    await page.type('#user-written-message', 'With all my heart, forever and always. - P');
-    await page.click('#btn-submit-message');
-    await sleep(400);
-
-    const savedInStorage = await page.evaluate(() => {
-      return localStorage.getItem('sapphire_blossom_written_message');
-    });
-    const feedbackText = await page.$eval('#message-feedback', (el) => el.textContent.trim());
-
-    assert(savedInStorage === 'With all my heart, forever and always. - P', 'Message safely stored in localStorage');
-    assert(feedbackText === 'Your message has been saved with love ✨', `Feedback confirmed: "${feedbackText}"`);
-
-    // -----------------------------------------------------------
-    // TEST 7: Console Errors & Mobile Responsiveness
-    // -----------------------------------------------------------
-    console.log('\n📌 Test 7: Checking mobile layout and console errors...');
+    console.log('\n📌 Test 6: Checking mobile viewport scaling and console errors...');
     await page.setViewport({ width: 375, height: 812, isMobile: true });
     await sleep(600);
 
-    // Ensure message stage is displayed for mobile width check
-    await page.evaluate(() => {
-      const msg = document.getElementById('message-stage');
-      const count = document.getElementById('countdown-stage');
-      if (msg) {
-        if (count) count.style.display = 'none';
-        msg.style.display = 'flex';
-        msg.style.opacity = '1';
-      }
+    const mobileCanvasCheck = await page.evaluate(() => {
+      const c = document.getElementById('sand-canvas');
+      return c && c.width > 0 && c.height > 0;
     });
-    await sleep(300);
-
-    const mobileMessageCardWidth = await page.$eval('.message-card', (el) => el.offsetWidth);
-    assert(
-      mobileMessageCardWidth <= 375 && mobileMessageCardWidth > 200,
-      `Mobile message card width is responsive (${mobileMessageCardWidth}px)`
-    );
+    assert(mobileCanvasCheck, 'Sand canvas responsive and active on mobile viewport');
 
     const relevantErrors = consoleErrors.filter((e) => !e.includes('favicon'));
     assert(
