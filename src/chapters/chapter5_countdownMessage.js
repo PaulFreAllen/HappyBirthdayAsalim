@@ -182,7 +182,7 @@ export function createChapter5(app) {
     const btnSubmit = document.getElementById('btn-submit-message');
     const btnRelive = document.getElementById('btn-relive-journey');
 
-    function saveMessage() {
+    async function saveMessage() {
       const content = textarea?.value?.trim() || '';
 
       if (!content) {
@@ -194,10 +194,41 @@ export function createChapter5(app) {
         return;
       }
 
+      const timestamp = new Date().toISOString();
+
+      // 1. Persist locally first so her message is never lost
       try {
         localStorage.setItem(STORAGE_MESSAGE_KEY, content);
+        localStorage.setItem(STORAGE_MESSAGE_KEY + '_data', JSON.stringify({
+          content,
+          timestamp,
+          recipient: 'Asalim',
+        }));
       } catch (err) {
-        console.warn('Could not store message:', err);
+        console.warn('Could not store message locally:', err);
+      }
+
+      // 2. Submit to Supabase if configured
+      const sbConfig = config.supabase || window.SUPABASE_CONFIG;
+      if (sbConfig?.url && sbConfig?.anonKey) {
+        try {
+          await fetch(`${sbConfig.url}/rest/v1/messages`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': sbConfig.anonKey,
+              'Authorization': `Bearer ${sbConfig.anonKey}`,
+              'Prefer': 'return=minimal',
+            },
+            body: JSON.stringify({
+              content,
+              created_at: timestamp,
+              sender: 'Asalim',
+            }),
+          });
+        } catch (sbErr) {
+          console.warn('Supabase sync deferred to local storage:', sbErr);
+        }
       }
 
       if (feedback) {

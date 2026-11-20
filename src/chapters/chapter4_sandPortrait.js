@@ -31,7 +31,8 @@ export function createChapter4(app) {
   const SR = 236, SG = 222, SB = 190; // Pale gold-silver sand
   const getPointBudget = () => {
     const vmin = Math.min(window.innerWidth, window.innerHeight);
-    return vmin < 600 ? 40000 : vmin < 800 ? 60000 : 85000;
+    const vmax = Math.max(window.innerWidth, window.innerHeight);
+    return vmax >= 1200 ? 100000 : vmin < 600 ? 50000 : 75000;
   };
 
   const CFG = {
@@ -54,6 +55,7 @@ export function createChapter4(app) {
   let cv, ctx, lay, lctx, wk, wctx;
   let W = 0, H = 0, D = 1;
   let imgData, buf, N = 0;
+  let numPortrait = 0;
   let X, Y, VX, VY, TX, TY, R, TR, TG, TB;
   let ww = 0, wh = 0, lum0 = null, rgb0 = null, lo = 0, hi = 1, hasSrc = false;
   let prog = 0, el = 0, playing = true, time = 0, last = performance.now();
@@ -168,6 +170,7 @@ export function createChapter4(app) {
 
   function alloc() {
     N = CFG.MAX_POINTS;
+    numPortrait = Math.floor(N * 0.72);
     X = new Float32Array(N);
     Y = new Float32Array(N);
     VX = new Float32Array(N);
@@ -253,8 +256,10 @@ export function createChapter4(app) {
         const i = y * ww + x;
         const gx = L[i - ww + 1] + 2 * L[i + 1] + L[i + ww + 1] - L[i - ww - 1] - 2 * L[i - 1] - L[i + ww - 1];
         const gy = L[i + ww - 1] + 2 * L[i + ww] + L[i + ww + 1] - L[i - ww - 1] - 2 * L[i - ww] - L[i - ww + 1];
-        const bm = x < 4 || x >= ww - 4 || y < 4 || y >= wh - 4 || Math.abs(y - Math.floor(wh * capFrac)) < 4;
-        const e = bm ? 0 : Math.sqrt(gx * gx + gy * gy) * 0.6;
+        // Soft border transition: eliminate hard rectangular frame/boundary
+        const edgeDist = Math.min(x, ww - 1 - x, y, wh - 1 - y);
+        const feather = Math.min(1, edgeDist / 12);
+        const e = Math.sqrt(gx * gx + gy * gy) * 0.6 * feather;
         E[i] = e > 1 ? 1 : e;
       }
     }
@@ -264,25 +269,32 @@ export function createChapter4(app) {
     const capRow = Math.floor(wh * capFrac);
 
     for (let i = 0; i < n; i++) {
+      const x = i % ww;
+      const y = (i / ww) | 0;
+      const edgeDist = Math.min(x, ww - 1 - x, y, wh - 1 - y);
+      const feather = Math.min(1, edgeDist / 12);
+
       const d = L[i] - 0.05;
-      let w = (d > 0 ? Math.pow(d, 1.2) : 0) + 0.9 * E[i];
+      let w = ((d > 0 ? Math.pow(d, 1.2) : 0) + 0.9 * E[i]) * (0.35 + 0.65 * feather);
       const cr = rgb0[i * 4];
       const cg = rgb0[i * 4 + 1];
       const cb = rgb0[i * 4 + 2];
       const sat = (Math.max(cr, cg, cb) - Math.min(cr, cg, cb)) / 255;
       if (sat > 0.1) w += 5 * (sat - 0.1);
-      if (((i / ww) | 0) >= capRow) w *= 6;
+      if (y >= capRow) w *= 6;
       s += w;
       cdf[i] = s;
     }
 
     if (s <= 0) return;
 
-    const f = Math.min((W * 0.92) / ww, (H * 0.86) / wh);
+    // Portrait scale & centering: preserve exact aspect ratio without distortion
+    const f = Math.min((W * 0.84) / ww, (H * 0.86) / wh);
     const ox = (W - ww * f) / 2;
-    const oy = (H - wh * f) / 2 - 10 * D;
+    const oy = (H - wh * f) / 2;
 
-    for (let i = 0; i < N; i++) {
+    // 1. Assign portrait particles (crisp facial detail and authentic proportions)
+    for (let i = 0; i < numPortrait; i++) {
       const r = Math.random() * s;
       let a = 0, b = n - 1;
       while (a < b) {
@@ -314,6 +326,25 @@ export function createChapter4(app) {
         TR[i] = lift(cr);
         TG[i] = lift(cg);
         TB[i] = lift(cb);
+      }
+    }
+
+    // 2. Assign ambient full-screen stardust particles (covering the ENTIRE viewport)
+    for (let i = numPortrait; i < N; i++) {
+      TX[i] = Math.random() * W;
+      TY[i] = Math.random() * H;
+      R[i] = Math.random() * 0.35;
+
+      if (Math.random() < 0.28) {
+        // Sapphire / celestial cyan stardust
+        TR[i] = 60 + Math.random() * 50;
+        TG[i] = 180 + Math.random() * 55;
+        TB[i] = 250 + Math.random() * 5;
+      } else {
+        // Pale gold / warm champagne sand grain
+        TR[i] = 230 + Math.random() * 25;
+        TG[i] = 210 + Math.random() * 30;
+        TB[i] = 175 + Math.random() * 45;
       }
     }
   }
@@ -441,17 +472,21 @@ export function createChapter4(app) {
       s = s < 0 ? 0 : s > 1 ? 1 : s;
 
       const gi = (((y / G) | 0) * gw) + ((x / G) | 0);
-      const fl = 1 - s * 0.92;
+      const isAmbient = i >= numPortrait;
+
+      // Keep particles moving throughout the full-screen composition
+      const fl = isAmbient ? (0.72 + 0.28 * (1 - s)) : (1 - s * 0.92);
 
       vx += (GX[gi] * push + (Math.random() - 0.5) * 0.08 * D) * fl;
       vy += (GY[gi] * push + (Math.random() - 0.5) * 0.08 * D) * fl;
 
       if (s > 0) {
-        vx += (TX[i] - x) * 0.012 * s;
-        vy += (TY[i] - y) * 0.012 * s;
+        const pull = isAmbient ? (0.003 * s) : (0.014 * s);
+        vx += (TX[i] - x) * pull;
+        vy += (TY[i] - y) * pull;
       }
 
-      const damp = 0.965 - 0.075 * s;
+      const damp = isAmbient ? 0.98 : (0.965 - 0.075 * s);
       vx *= damp;
       vy *= damp;
 
@@ -468,7 +503,7 @@ export function createChapter4(app) {
       VX[i] = vx;
       VY[i] = vy;
 
-      const aa = (A * (0.4 + 0.6 * s)) | 0;
+      const aa = isAmbient ? ((A * (0.35 + 0.25 * Math.sin(time * 2 + i * 0.5))) | 0) : ((A * (0.4 + 0.6 * s)) | 0);
       const xi = x | 0;
       const yi = y | 0;
 
