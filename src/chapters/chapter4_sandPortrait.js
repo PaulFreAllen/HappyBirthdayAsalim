@@ -31,8 +31,7 @@ export function createChapter4(app) {
   const SR = 236, SG = 222, SB = 190; // Pale gold-silver sand
   const getPointBudget = () => {
     const vmin = Math.min(window.innerWidth, window.innerHeight);
-    const vmax = Math.max(window.innerWidth, window.innerHeight);
-    return vmax >= 1200 ? 110000 : vmin < 600 ? 45000 : 75000;
+    return vmin < 600 ? 40000 : vmin < 800 ? 60000 : 85000;
   };
 
   const CFG = {
@@ -41,14 +40,14 @@ export function createChapter4(app) {
     POINT_SIZE: 1,
     INVERT: false,
     GAMMA: 1.1,
-    DURATION: config.chapter4?.duration || 8,
+    DURATION: config.chapter4?.duration || 16,
     JITTER: 0.2,
     ALPHA: 0.9,
   };
 
   if (app.reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     CFG.NOISE_SPEED = 0.3;
-    CFG.DURATION = config.chapter4?.reducedMotionDuration || 3;
+    CFG.DURATION = config.chapter4?.reducedMotionDuration || 4;
   }
 
   // Simulation variables & buffers
@@ -279,22 +278,9 @@ export function createChapter4(app) {
 
     if (s <= 0) return;
 
-    // Desktop: cover whole desktop (object-fit: cover) so particles span edge-to-edge
-    // Mobile: responsive fill
-    const isDesktop = (W / H) >= 1.0 || window.innerWidth >= 768;
-
-    let f, ox, oy;
-    if (isDesktop) {
-      // Scale to cover the entire desktop viewport width and height
-      f = Math.max(W / ww, H / (wh * capFrac));
-      ox = (W - ww * f) / 2;
-      // Center vertically around face and upper portrait region
-      oy = (H - (wh * capFrac) * f) * 0.35;
-    } else {
-      f = Math.max(W / ww, (H * 0.88) / wh);
-      ox = (W - ww * f) / 2;
-      oy = (H - wh * f) / 2 - 10 * D;
-    }
+    const f = Math.min((W * 0.92) / ww, (H * 0.86) / wh);
+    const ox = (W - ww * f) / 2;
+    const oy = (H - wh * f) / 2 - 10 * D;
 
     for (let i = 0; i < N; i++) {
       const r = Math.random() * s;
@@ -426,7 +412,7 @@ export function createChapter4(app) {
 
     if (playing) {
       el += dt;
-      prog = ease(Math.max(0, Math.min(1, (el - 0.4) / (CFG.DURATION - 0.4))));
+      prog = ease(Math.max(0, Math.min(1, (el - 1.2) / CFG.DURATION)));
       const rvSlider = document.getElementById('sand-rv');
       const rvOutput = document.getElementById('sand-rv-o');
       if (rvSlider) rvSlider.value = Math.round(prog * 1000);
@@ -446,7 +432,6 @@ export function createChapter4(app) {
     const jit = CFG.JITTER * D;
     const ps = Math.max(1, Math.round(CFG.POINT_SIZE * D));
     const A = CFG.ALPHA * 255;
-    const pull = 0.024 * (8 / CFG.DURATION);
 
     buf.fill(0);
 
@@ -462,8 +447,8 @@ export function createChapter4(app) {
       vy += (GY[gi] * push + (Math.random() - 0.5) * 0.08 * D) * fl;
 
       if (s > 0) {
-        vx += (TX[i] - x) * pull * s;
-        vy += (TY[i] - y) * pull * s;
+        vx += (TX[i] - x) * 0.012 * s;
+        vy += (TY[i] - y) * 0.012 * s;
       }
 
       const damp = 0.965 - 0.075 * s;

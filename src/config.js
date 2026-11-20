@@ -99,8 +99,8 @@ export const config = {
     continueButtonText: "Continue to Countdown ✨",
     caption: DEFAULT_SAND_CAPTION,
     photoSrc: DEFAULT_SAND_PHOTO,
-    duration: 8,
-    reducedMotionDuration: 3,
+    duration: 16,
+    reducedMotionDuration: 4,
     replayButtonText: "Scatter & Re-form ✨",
   },
 

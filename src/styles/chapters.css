@@ -1550,9 +1550,9 @@ body.theme-ch-7 {
 
 .sand-birthday-banner {
   position: fixed;
-  bottom: clamp(5.8rem, 11vh, 8rem);
+  top: 48%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: 35;
   display: flex;
   justify-content: center;
