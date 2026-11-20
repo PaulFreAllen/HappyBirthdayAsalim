@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#040711" />
+    <meta name="description" content="Sapphire Blossom — A little journey, made with love." />
+    <title>Sapphire Blossom ✨</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>" />
+    <script type="module" crossorigin src="./assets/index-ChZpwFm1.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BizP-yx-.css">
+  </head>
+  <body class="theme-ch-1">
+    <!-- Background Canvas for Interactive Stardust Particles -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Ambient Gradient Lighting & Soft Vignette -->
+    <div class="ambient-lighting" aria-hidden="true"></div>
+    <div class="vignette-overlay" aria-hidden="true"></div>
+
+    <!-- Global SVG Assets / Gradients -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+      <defs>
+        <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00f0ff" />
+          <stop offset="50%" stop-color="#38bdf8" />
+          <stop offset="100%" stop-color="#2563eb" />
+        </linearGradient>
+        <linearGradient id="lockGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#38bdf8" />
+          <stop offset="100%" stop-color="#1d4ed8" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <!-- Discreet Global Navigation & Chapter Stepper -->
+    <header class="experience-nav">
+      <div class="nav-brand">
+        <span class="gem-icon"></span>
+        <span>Sapphire Blossom</span>
+      </div>
+
+      <nav class="chapter-stepper" aria-label="Journey Chapters">
+        <button class="step-dot active" data-chapter="1" data-title="Countdown" aria-label="Chapter 1: Opening Countdown"></button>
+        <button class="step-dot" data-chapter="2" data-title="Date Lock" aria-label="Chapter 2: Date Lock"></button>
+        <button class="step-dot" data-chapter="3" data-title="Blue Rose Garden" aria-label="Chapter 3: Blue Rose Garden"></button>
+        <button class="step-dot" data-chapter="4" data-title="Sand Portrait" aria-label="Chapter 4: Sand Portrait Finale"></button>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Optional Ambient Background Music Toggle Button -->
+        <button id="btn-audio-toggle" class="icon-btn" title="Toggle background music" aria-label="Toggle background music" style="display: none;">
+          <svg class="audio-icon-playing" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg class="audio-icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+
+        <button id="btn-restart" class="icon-btn" title="Start from beginning" aria-label="Start over">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Experience Stage -->
+    <main id="app">
+      <div id="stage">
+        <!-- Chapter 1: Opening Countdown Animation -->
+        <section id="chapter-1" class="chapter-stage active" data-index="1">
+          <!-- Populated by chapter1_openingCountdown.js -->
+        </section>
+
+        <!-- Chapter 2: Date Lock -->
+        <section id="chapter-2" class="chapter-stage inactive" data-index="2">
+          <!-- Populated by chapter2_dateLock.js -->
+        </section>
+
+        <!-- Chapter 3: Blue Rose Garden -->
+        <section id="chapter-3" class="chapter-stage inactive" data-index="3">
+          <!-- Populated by chapter3_garden.js -->
+        </section>
+
+        <!-- Chapter 4: Sand Portrait Birthday Finale (Final Scene) -->
+        <section id="chapter-4" class="chapter-stage chapter-sand-portrait inactive" data-index="4">
+          <!-- Populated by chapter4_sandPortrait.js -->
+        </section>
+      </div>
+    </main>
+
+  </body>
+</html>

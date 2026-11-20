@@ -28,7 +28,7 @@ export const config = {
   // -----------------------------------------------------------------
   audio: {
     enabled: false,
-    src: "/media/background_song.mp3",
+    src: "./media/background_song.mp3",
     volume: 0.35,
     title: "Romantic Ambient Melody",
   },
